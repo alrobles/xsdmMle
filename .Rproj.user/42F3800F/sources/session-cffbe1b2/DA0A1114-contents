@@ -1,0 +1,41 @@
+param_list
+like_neg_ltsgr_cpp(O = param_list$O, mu = param_list$mu, sigLtil = param_list$sigLtil, sigRtil = param_list$sigRtil, envdat = envdat)
+like_neg_ltsgr_cpp = function(O, mu, sigLtil, sigRtil, envdat, num_threads = 1)
+{
+  
+  # Set the desired number of threads for RcppParallel operations
+  RcppParallel::setThreadOptions(numThreads = num_threads)
+  
+  #get various dimensions for convenience
+  n = dim(envdat)[3] #number of locations with detections or nondetections
+  tslen = dim(envdat)[2] #steps in time series
+  p = length(mu) #dimensions/number of env vars
+  
+  #subtract mu and apply O to get to u
+  envdat_mat = matrix(envdat, nrow = p, ncol = tslen*n)
+  
+  #apply the asymmetries
+  if (p==1)
+  {
+    DLinv = matrix(1/sigLtil,1,1)
+    DRinv = matrix(1/sigRtil,1,1)
+  } else {
+    DLinv = diag(1/sigLtil)
+    DRinv = diag(1/sigRtil)
+  }
+  DRLinv <- DRinv - DLinv 
+  
+  res =  xsdmMle:::likeLtsg(
+    orthoM = t(O),
+    envM = envdat_mat,
+    mu = mu,
+    DL = DLinv,
+    DRL = DRLinv,
+    q = tslen,
+    r = n ) 
+  
+  RcppParallel::setThreadOptions(numThreads = RcppParallel::defaultNumThreads())
+  
+  return(res)
+  
+}

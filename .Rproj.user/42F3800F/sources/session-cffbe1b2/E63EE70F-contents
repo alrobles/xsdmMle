@@ -1,0 +1,40 @@
+math_to_bio_r = function(parms)
+{
+  #get the environmental dimension, n
+  p = length(parms)
+  n = (-5+sqrt(9+8*p))/2
+  if (abs(n-round(n))>1e-10){stop("Error in math_to_biol: input parameter vector of inappropriate length")}
+  
+  if (n>1)
+  {
+    ctil = parms[1]
+    
+    entries = parms[2:(1+(n^2-n)/2)]
+    sk = matrix(0,n,n)
+    sk[lower.tri(sk)] = as.numeric(entries)
+    sk = sk - t(sk)
+    O = expm::expm(sk)
+    
+    mu = parms[(1+(n^2-n)/2+1):(1+(n^2-n)/2+n)]
+    sigLtil = exp(parms[(1+(n^2-n)/2+n+1):(1+(n^2-n)/2+2*n)])
+    sigRtil = exp(parms[(1+(n^2-n)/2+2*n+1):(1+(n^2-n)/2+3*n)])
+    pd = expit(parms[1+(n^2-n)/2+3*n+1])
+  }
+}
+
+math_to_bio  <-function(param_vector){
+  
+  Opar <- param_vector[ grep("O", names(param_vector) ) ]
+  
+  param.list = list(
+    O = build_O_matrix(Opar)
+    mu =   param_vector[ grep("mu", names(param_vector) ) ],
+    sigLtil = param_vector[ grep("sigLtil", names(param_vector) ) ] |> exp () ,
+    sigRtil = param_vector[ grep("sigLtil", names(param_vector) ) ] |> exp (),
+    ctil =  param_vector[ grep("ctil", names(param_vector) ) ],
+    pd = param_vector[ grep("pd", names(param_vector) ) ] |> expit()
+  )
+ 
+  
+  return(param.list)
+}

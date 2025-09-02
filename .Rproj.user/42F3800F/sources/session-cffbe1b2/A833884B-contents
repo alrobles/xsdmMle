@@ -1,0 +1,29 @@
+#' Convert a unconstrained vector of parameters in a list of parameters
+#' to fit the log likelihood function.
+#'
+#' @param param_vector A vector of unconstrained parameters to create a list for the
+#' likelihood function
+#'
+#' @returns A list of parameters to pass to the log likelihood function.
+#' It contains O, mu, sigLtil, sigRtil, ctil, pd
+#' @export
+#'
+#' @examples
+#' math_to_bio(paramTableExample[1, ])
+math_to_bio  <-function(param_vector){
+  
+  Opar <- param_vector[ grep("O", names(param_vector) ) ]
+  
+  param.list = list(
+    O = build_O_matrix(Opar),
+    mu =   param_vector[ grep("mu", names(param_vector) ) ],
+    sigLtil = param_vector[ grep("sigLtil", names(param_vector) ) ] |> exp () ,
+    sigRtil = param_vector[ grep("sigRtil", names(param_vector) ) ] |> exp (),
+    pd = param_vector[ grep("pd", names(param_vector) ) ] |> expit(),
+    ctil =  param_vector[ grep("ctil", names(param_vector) ) ]
+  
+  )
+  
+  
+  return(param.list)
+}

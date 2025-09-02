@@ -1,0 +1,60 @@
+
+params <- paramTableExample[1, ] |> unlist()
+loglik_orthog_nd_unconstr_test = function(param_vector, envdat, pa, opt = NULL, negative = TRUE, num_threads = RcppParallel::defaultNumThreads())
+{
+  
+  # Set the desired number of threads for RcppParallel operations
+  RcppParallel::setThreadOptions(numThreads = num_threads)
+  
+  if(is.null(opt)){
+    opt = rep(NA, length(param_vector))
+  }
+  
+  # Check if any of opt is not NA
+  if (any(!sapply(opt, is.na))) {
+    i = !sapply(opt, is.na)
+    # Fix non-NA values
+    param_vector[i] <- opt[i]
+  }
+  
+  #prep param
+  print(param_vector)
+  param_list <- math_to_bio(param_vector)
+  
+  
+  
+  f <- function(env, occ)function(O, mu, sigLtil, sigRtil, pd, ctil){
+    loglik_orthog_nd(O, mu, sigLtil, sigRtil, pd, ctil, env, occ)
+  }
+  f_par <- f(envdat, pa)
+  res <- suppressWarnings(do.call(f_par, args = param_list))
+  
+  RcppParallel::setThreadOptions(numThreads = RcppParallel::defaultNumThreads())
+  if(negative != TRUE){
+    return(res)
+  } else {
+    return(-res)
+  }
+  
+}
+
+loglik_orthog_nd_unconstr_test(params, envdat = envdat_ex, pa = pa, 
+                               opt =  c(-8.2, NA, NA,
+                                        NA, NA, NA,
+                                        NA, NA, -2.2))
+res <- optimx::optimx(par = params,
+               fn = loglik_orthog_nd_unconstr,
+               envdat = envdat_ex, pa = pa, 
+               opt =  c(-7, NA, NA,
+                        NA, NA, NA,
+                        NA, NA, -2),
+               method = "BFGS", control = list(trace = 2)
+               
+               )
+res$value
+res$ctil <- -7.2
+res$pd <- -2
+
+loglik_orthog_nd_unconstr_test(res[1:9], envdat = envdat, pa = pa)
+               
+res

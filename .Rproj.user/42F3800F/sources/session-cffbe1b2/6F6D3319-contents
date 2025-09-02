@@ -1,0 +1,327 @@
+source("aux_func.R")
+library(tidyverse)
+
+f_optim_functor <- function(envdat, pa)function(optim_vec,
+                                                parindex = 1,
+                                                stepsize = NULL){
+  if(is.null(stepsize)){
+    stepsize <- 0.001
+  }
+  
+  nsteps <- 1
+  magnitude_index <- -1
+  new_optim_vec <- optim_vec
+  
+  optim_ll <- loglik_orthog_nd_unconstr(optim_vec, envdat, pa)
+  new_optim_ll <- optim_ll
+  # threshold
+  alpha_step <- 0.94
+  alpha = 0.95
+  degree_freedom <- 1 #nummu1ber of fixed parameters
+  incr_down <- qchisq(alpha, degree_freedom)/2
+  incr_step <- qchisq(alpha_step, degree_freedom)/2
+  
+  delta_step <- incr_down - incr_step
+  
+  thresh = optim_ll - incr_down
+  thresh_step = optim_ll - incr_step
+  #adapt  step part
+  
+  optim_vec_output_df <- c(optim_vec, value = optim_ll)
+  newstepsize <- stepsize
+  
+  cat("fitting step size \n")
+  
+  while(new_optim_ll > (optim_ll - delta_step) ){
+    
+    
+    
+    if(new_optim_ll > (optim_ll - delta_step)){
+      magnitude_index <- magnitude_index + 1
+      newstepsize <- stepsize*10^(magnitude_index)
+      deltapos <- newstepsize*nsteps
+    }
+    
+    # cat("stepsize ", newstepsize, "\n")
+    # cat(new_optim_ll, " > ", (optim_ll - delta_step), "\n")
+    # print(new_optim_ll > (optim_ll - delta_step))
+    
+    new_optim_vec[parindex] <- new_optim_vec[parindex] + deltapos
+    
+    naVec <- rep(NA, 9)
+    naVec[parindex] <- new_optim_vec[parindex]
+    
+    
+    
+    suppressWarnings({
+      new_optim <- optimx::optimx(
+        par = optim_vec,
+        fn = loglik_orthog_nd_unconstr,
+        env = envdat,
+        pa = pa,
+        opt = naVec,
+        hessian = FALSE,
+        control = list(trace=FALSE, maximize = TRUE, kkt = FALSE),
+        method=c("ucminf") )
+      
+    })
+    
+    
+    new_optim_ll <- new_optim$value
+    
+    
+  }
+  #reset
+  stepsize <- stepsize*10^(magnitude_index-1)/2
+  
+  new_optim_ll <- optim_ll
+  new_optim_vec <- optim_vec
+  nsteps <- 1
+  
+  #right size
+  cat("start right size \n")
+  while(new_optim_ll > thresh){
+    # cat("step ", nsteps, "\n")
+    #
+    # cat(new_optim_ll, " > ", thresh, "\n")
+    # print(new_optim_ll > thresh)
+    if(nsteps > 20){
+      break("stop: reach maximum steps")
+    }
+    deltapos <- nsteps*stepsize
+    # cat("deltapos ", deltapos, "\n")
+    #deltaneg <- -nsteps*stepsize
+    new_optim_vec[parindex] <- new_optim_vec[parindex] + deltapos
+    
+    naVec <- rep(NA, 9)
+    naVec[parindex] <- new_optim_vec[parindex]
+    
+    
+    suppressMessages({
+      
+      new_optim <- optimx::optimx(
+        par = new_optim_vec,
+        fn = loglik_orthog_nd_unconstr,
+        envdat = envdat,
+        pa = pa,
+        opt = naVec,
+        hessian = FALSE,
+        control = list(trace=FALSE, maximize = TRUE, kkt = FALSE),
+        method=c("ucminf") )
+      
+    })
+    
+    
+    
+    #delta_ll <- optim_ll - new_optim$value
+    new_optim_ll <- new_optim$value
+    #threshold
+    nsteps <- nsteps + 1
+    #print(new_optim_ll)
+    new_optim[parindex] <- new_optim_vec[parindex]
+    optim_vec_output_df <- rbind(optim_vec_output_df, c(unlist(new_optim[1:9]), value = new_optim_ll) )
+  }
+  
+  #reset
+  
+  new_optim_ll <- optim_ll
+  new_optim_vec <- optim_vec
+  nsteps <- 1
+  
+  #left size
+  cat("Left side \n")
+  while(new_optim_ll > thresh){
+    #cat("step ", nsteps, "\n")
+    
+    #cat(new_optim_ll, " > ", thresh, "\n")
+    #print(new_optim_ll > thresh)
+    
+    if(nsteps > 20){
+      break("stop: reach maximum steps")
+    }
+    deltapos <- nsteps*stepsize
+    #cat("deltapos ", deltapos, "\n")
+    #deltaneg <- -nsteps*stepsize
+    new_optim_vec[parindex] <- new_optim_vec[parindex] - deltapos
+    
+    naVec <- rep(NA, 9)
+    naVec[parindex] <- new_optim_vec[parindex]
+    
+    
+    suppressMessages({
+      
+      new_optim <- optimx::optimx(
+        par = new_optim_vec,
+        fn = loglik_orthog_nd_unconstr,
+        envdat = envdat,
+        pa = pa,
+        opt = naVec,
+        hessian = FALSE,
+        control = list(trace=FALSE, maximize = TRUE, kkt = FALSE),
+        method=c("ucminf") )
+      
+    })
+    
+    #delta_ll <- optim_ll - new_optim$value
+    new_optim_ll <- new_optim$value
+    #threshold
+    nsteps <- nsteps + 1
+    #print(new_optim_ll)
+    new_optim[parindex] <- new_optim_vec[parindex]
+    optim_vec_output_df <- rbind(optim_vec_output_df, c(unlist(new_optim[1:9]), value = new_optim_ll) )
+  }
+  
+  rownames(optim_vec_output_df) <- 1:nrow(optim_vec_output_df)
+  optim_vec_output_df
+  
+}
+
+f_test <- f_optim_functor(envdat, pa)
+
+profile_parameter_1 <- f_test(optim_vec = optim_vec, parindex = 1)
+profile_parameter_1 %>%
+  ggplot() + geom_point(aes(ctil, value))
+optim_profile_1
+{
+  tic()
+  
+  
+  
+  
+  optim_profile_1 <- furrr::future_map(1:8, function(x){
+    
+    bio1_ts <-  terra::rast("data-raw/BIO01-detrended-NM.tif")
+    bio12_ts <- terra::rast("data-raw/BIO12-detrended-NM.tif")
+    bio12_ts <- bio12_ts/10000
+    envData <- list(bio1 = bio1_ts, bio12 = bio12_ts)
+    occ <- readr::read_csv("data-raw/vsp_occ.csv", show_col_types = FALSE)
+    
+    f_test <- f_optim_functor(envData, occ)
+    f_test(optim_vec, parindex = x)
+  })
+  
+  optim_profile_1[[1]]
+  
+  toc()
+}
+
+optim_profile_1[[4]] %>%
+  ggplot() + geom_point(aes(sigl2, value))
+
+optim_ll <- xsdm_log_lik(optim_vec, env = envData, occ = occ)
+#new_optim_ll <- optim_ll
+# threshold
+alpha = 0.95
+degree_freedom <- 1 #nummu1ber of fixed parameters
+incr_down <- qchisq(alpha, degree_freedom)/2
+incr_step <- qchisq(alpha_step, degree_freedom)/2
+optim_ll - incr_down
+
+optim_profile_1[[1]] %>% colnames()
+optim_profile_1[[5]] %>%
+  ggplot() + geom_point(aes(sigr1, value)) +
+  geom_line(aes(sigr1, value))
+
+optim_profile_1[[3]] %>%
+  ggplot() + geom_point(aes(mu2, value)) +
+  geom_line(aes(mu2, value))
+
+
+
+optim_profile_6 <- f_test(optim_vec, parindex = 6)
+toc()
+optim_profile <- f_test(optim_vec, parindex = 7)
+optim_profile_8 <- f_test(optim_vec, parindex = 8)
+optim_profile |>
+  as.data.frame() %>%
+  mutate(pd = rje::expit(pd)) %>%
+  ggplot() + geom_point(aes(pd, value))
+
+xprofile_param_list <- purrr::map(1:8, function(y){
+  purrr::map_df(seq(-3,3, 0.5), function(x){
+    optim_vec[y] <- optim_vec[y] + x
+    optim_vec$L <- 0
+    return(optim_vec)
+  })
+  
+  
+  
+})
+
+
+
+Profile_par_1 <- purrr::map(1:nrow(profile_param_list[[1]]), function(xrow){
+  optimx::optimx(
+    par = unlist(profile_param_list[[1]][xrow, ]),
+    fn = xsdm_log_lik,
+    env = envData,
+    occ = occ,
+    opt = c(profile_param_list[[1]][xrow, 1], NA, NA,
+            NA, NA, NA,
+            NA, NA, 0),
+    control = list(trace=TRUE, maximize = TRUE, maxit = 100),
+    method=c("BFGS") )
+}, .progress = TRUE)
+Profile_par_1 |> purrr::reduce(rbind) |> readr::write_csv("Profile_par_1.csv")
+
+
+
+Profile_par_2 <- purrr::map(1:nrow(profile_param_list[[2]]), function(xrow){
+  optimx::optimx(
+    par = unlist(profile_param_list[[2]][xrow, ]),
+    fn = xsdm_log_lik,
+    env = envData,
+    occ = occ,
+    opt = c(NA, profile_param_list[[2]][xrow, 2], NA,
+            NA, NA, NA,
+            NA, NA, 0),
+    control = list(trace=FALSE, maximize = TRUE, maxit = 100),
+    method=c("BFGS") )
+}, .progress = TRUE)
+Profile_par_2 |> purrr::reduce(rbind) |> readr::write_csv("Profile_par_2.csv")
+
+Profile_par_3 <- purrr::map(1:nrow(profile_param_list[[3]]), function(xrow){
+  optimx::optimx(
+    par = unlist(profile_param_list[[3]][xrow, ]),
+    fn = xsdm_log_lik,
+    env = envData,
+    occ = occ,
+    opt = c(NA, NA, profile_param_list[[3]][xrow, 3],
+            NA, NA, NA,
+            NA, NA, 0),
+    control = list(trace=TRUE, maximize = TRUE, maxit = 100),
+    method=c("BFGS") )
+}, .progress = TRUE)
+
+Profile_par_3 |> purrr::reduce(rbind) |> readr::write_csv("Profile_par_3.csv")
+
+Profile_par_4 <- purrr::map(1:nrow(profile_param_list[[4]]), function(xrow){
+  optimx::optimx(
+    par = unlist(profile_param_list[[4]][xrow, ]),
+    fn = xsdm_log_lik,
+    env = envData,
+    occ = occ,
+    opt = c(NA, NA, NA,
+            profile_param_list[[4]][xrow, 4], NA, NA,
+            NA, NA, 0),
+    control = list(trace=TRUE, maximize = TRUE, maxit = 100),
+    method=c("BFGS") )
+}, .progress = TRUE)
+
+Profile_par_4 |> purrr::reduce(rbind) |> readr::write_csv("Profile_par_4.csv")
+
+
+Profile_par_7 <- purrr::map(1:nrow(profile_param_list[[8]]), function(xrow){
+  optimx::optimx(
+    par = unlist(profile_param_list[[7]][xrow, ]),
+    fn = xsdm_log_lik,
+    env = envData,
+    occ = occ,
+    opt = c(NA, NA, NA,
+            NA, NA, NA,
+            profile_param_list[[7]][xrow, 7], NA, 0),
+    control = list(trace=FALSE, maximize = TRUE, maxit = 100),
+    method=c("BFGS") )
+}, .progress = TRUE)
+
+Profile_par_8 |> purrr::reduce(rbind) |> readr::write_csv("Profile_par_8.csv")

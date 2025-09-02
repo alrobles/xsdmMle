@@ -1,0 +1,177 @@
+loglik_orthog_nd_unconstr
+
+f_optim_functor <- function(envdat, pa)function(optim_vec, parindex = 1, stepsize = NULL){
+  if(is.null(stepsize)){
+    stepsize <- 0.001
+  }
+  
+  nsteps <- 1
+  magnitude_index <- -1
+  new_optim_vec <- optim_vec
+  
+  optim_ll <- loglik_orthog_nd_unconstr(optim_vec, envData, occ)
+  new_optim_ll <- optim_ll
+  # threshold
+  alpha_step <- 0.94
+  alpha = 0.95
+  degree_freedom <- 1 #nummu1ber of fixed parameters
+  incr_down <- qchisq(alpha, degree_freedom)/2
+  incr_step <- qchisq(alpha_step, degree_freedom)/2
+  
+  delta_step <- incr_down - incr_step
+  
+  thresh = optim_ll - incr_down
+  thresh_step = optim_ll - incr_step
+  #adapt  step part
+  
+  optim_vec_output_df <- c(optim_vec, value = optim_ll)
+  newstepsize <- stepsize
+  
+  cat("fitting step size \n")
+  
+  while(new_optim_ll > (optim_ll - delta_step) ){
+    
+    
+    
+    if(new_optim_ll > (optim_ll - delta_step)){
+      magnitude_index <- magnitude_index + 1
+      newstepsize <- stepsize*10^(magnitude_index)
+      deltapos <- newstepsize*nsteps
+    }
+    
+    # cat("stepsize ", newstepsize, "\n")
+    # cat(new_optim_ll, " > ", (optim_ll - delta_step), "\n")
+    # print(new_optim_ll > (optim_ll - delta_step))
+    
+    new_optim_vec[parindex] <- new_optim_vec[parindex] + deltapos
+    
+    naVec <- rep(NA, 9)
+    naVec[parindex] <- new_optim_vec[parindex]
+    naVec[9] <- 0
+    
+    
+    suppressWarnings({
+      new_optim <- optimx::optimx(
+        par = new_optim_vec,
+        fn = xsdm_log_lik,
+        env = envData,
+        occ = occ,
+        opt = naVec,
+        hessian = FALSE,
+        control = list(trace=FALSE, maximize = TRUE, kkt = FALSE),
+        method=c("ucminf") )
+      
+    })
+    
+    
+    new_optim_ll <- new_optim$value
+    
+    
+  }
+  #reset
+  stepsize <- stepsize*10^(magnitude_index-1)/2
+  
+  new_optim_ll <- optim_ll
+  new_optim_vec <- optim_vec
+  nsteps <- 1
+  
+  #right size
+  cat("start right size \n")
+  while(new_optim_ll > thresh){
+    # cat("step ", nsteps, "\n")
+    #
+    # cat(new_optim_ll, " > ", thresh, "\n")
+    # print(new_optim_ll > thresh)
+    if(nsteps > 50){
+      break("stop: reach maximum steps")
+    }
+    deltapos <- nsteps*stepsize
+    # cat("deltapos ", deltapos, "\n")
+    #deltaneg <- -nsteps*stepsize
+    new_optim_vec[parindex] <- new_optim_vec[parindex] + deltapos
+    
+    naVec <- rep(NA, 9)
+    naVec[parindex] <- new_optim_vec[parindex]
+    naVec[9] <- 0
+    
+    
+    suppressMessages({
+      
+      new_optim <- optimx::optimx(
+        par = new_optim_vec,
+        fn = xsdm_log_lik,
+        env = envData,
+        occ = occ,
+        opt = naVec,
+        hessian = FALSE,
+        control = list(trace=FALSE, maximize = TRUE, kkt = FALSE),
+        method=c("ucminf") )
+      
+    })
+    
+    
+    
+    #delta_ll <- optim_ll - new_optim$value
+    new_optim_ll <- new_optim$value
+    #threshold
+    nsteps <- nsteps + 1
+    #print(new_optim_ll)
+    
+    optim_vec_output_df <- rbind(optim_vec_output_df, c(unlist(new_optim[1:9]), value = new_optim_ll) )
+  }
+  
+  #reset
+  
+  new_optim_ll <- optim_ll
+  new_optim_vec <- optim_vec
+  nsteps <- 1
+  
+  #left size
+  cat("Left side \n")
+  while(new_optim_ll > thresh){
+    #cat("step ", nsteps, "\n")
+    
+    #cat(new_optim_ll, " > ", thresh, "\n")
+    #print(new_optim_ll > thresh)
+    
+    if(nsteps > 50){
+      break("stop: reach maximum steps")
+    }
+    deltapos <- nsteps*stepsize
+    #cat("deltapos ", deltapos, "\n")
+    #deltaneg <- -nsteps*stepsize
+    new_optim_vec[parindex] <- new_optim_vec[parindex] - deltapos
+    
+    naVec <- rep(NA, 9)
+    naVec[parindex] <- new_optim_vec[parindex]
+    naVec[9] <- 0
+    
+    suppressMessages({
+      
+      new_optim <- optimx::optimx(
+        par = new_optim_vec,
+        fn = xsdm_log_lik,
+        env = envData,
+        occ = occ,
+        opt = naVec,
+        hessian = FALSE,
+        control = list(trace=FALSE, maximize = TRUE, kkt = FALSE),
+        method=c("ucminf") )
+      
+    })
+    
+    
+    
+    #delta_ll <- optim_ll - new_optim$value
+    new_optim_ll <- new_optim$value
+    #threshold
+    nsteps <- nsteps + 1
+    #print(new_optim_ll)
+    
+    optim_vec_output_df <- rbind(optim_vec_output_df, c(unlist(new_optim[1:9]), value = new_optim_ll) )
+  }
+  
+  rownames(optim_vec_output_df) <- 1:nrow(optim_vec_output_df)
+  optim_vec_output_df
+  
+}

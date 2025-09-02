@@ -1,0 +1,44 @@
+envdat <- envdat_ex
+pa <- occExample
+param_vector <- paramTableExample[1, ]
+loglik_orthog_nd_unconstr(params, envdat, pa)
+
+loglik_orthog_nd_unconstr = function(param_vector, envdat, pa, opt = NULL, num_threads = RcppParallel::defaultNumThreads())
+{
+  
+  if(is.null(opt)){
+    opt = rep(NA, length(param_vector))
+  }
+  
+  # Check if any of opt is not NA
+  if (any(!sapply(opt, is.na))) {
+    i = !sapply(opt, is.na)
+    # Fix non-NA values
+    param_vector[i] <- opt[i]
+  }
+  
+  #**prep the arguments to loglik
+  
+  param_list  <- math_to_bio(param_vector)
+  
+  # n = dim(envdat)[1]
+  # if (n!=length(parms_biol$mu))
+  # {
+  #   stop("Error in loglik_orthog_nd_unconstr: checkpoint 1")
+  # }
+  # 
+  #**now call it and return
+  
+  f <- function(env, occ)function(O, mu, sigLtil, sigRtil, pd, ctil){
+    loglik_orthog_nd(O, mu, sigLtil, sigRtil, pd, ctil, env, occ)
+  }
+  f_par <- f(envdat, pa)
+  res <- suppressWarnings(do.call(f_par, args = param_list))
+  
+  #if (!is.finite(res))
+  #{
+  #  save(parms,envdat,pa,file="Temp.RData")
+  #  stop("Error in loglik_orthog_nd_unconstr: checkpoint 2")
+  #}
+  return(res)  
+}

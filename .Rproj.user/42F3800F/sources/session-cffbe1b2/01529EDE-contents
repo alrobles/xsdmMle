@@ -1,0 +1,77 @@
+library("ucminf")
+
+envdat <- envdat_ex
+pa <- occExample
+params <- paramTableExample[10, ] |>  unlist()  
+loglik_orthog_nd_unconstr(params, envdat, pa, negative = TRUE)
+
+
+
+output <- ucminf::ucminf(par = params,
+               fn = loglik_orthog_nd_unconstr,
+               envdat = envdat, 
+               pa = pa,
+               opt = NULL,
+               negative = TRUE,
+               hessian =  FALSE,
+               control = list(trace = 0))
+output$value
+library(furrr)
+plan(multisession, workers = 18)
+library(tictoc)
+{
+  tic()
+  df_output <- furrr::future_map_dfr(1:nrow(paramTableExample), function(x){
+  params <- paramTableExample[x, ] |> unlist()
+  
+  purrr::map(paramTableExample, function(x){
+    x
+  })
+  
+  
+  
+  suppressWarnings({
+    
+    res = ucminf::ucminf(par = params,
+                         fn  = loglik_orthog_nd_unconstr,
+                         envdat = envdat,
+                         pa  = pa,
+                         negative = TRUE,
+                         num_threads = 4,
+                         hessian = FALSE)
+    
+    output <- c(res$par, value = res$value, convergence = res$convergence )
+  })
+  return(output)
+  
+}, .progress = TRUE, .options = furrr_options(seed = TRUE))
+toc()
+}
+
+
+
+library(tidyverse)
+df_output |> as_tibble()
+library(tidyverse)
+df_output <- df_output |> 
+  select(value) %>% 
+  mutate(value = -value) %>% 
+  arrange(desc(value)) %>% 
+  mutate(delta = max(value) - value) %>% 
+  mutate(delta = log(delta)) %>% 
+  mutate(id = row_number() - 1)
+
+#install.packages("Rcurvep")
+library(Rcurvep)
+library("inflection")
+
+df_output |> ggplot() + geom_histogram(aes(value))
+df_output |> ggplot() + geom_point(aes(id, delta))
+inflection::ese(x = df_output$id[-1], y = df_output$delta[-1])
+uik_pts <- inflection::d2uik(df_output$id[-1], df_output$delta[-1])
+df_output %>% 
+  mutate(class = ifelse(id<uik_pts, 1, 2)) %>% 
+  ggplot() + geom_point(aes(id, delta, col = class))
+
+
+df_output  

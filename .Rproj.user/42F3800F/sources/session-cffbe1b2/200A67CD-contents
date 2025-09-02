@@ -1,0 +1,97 @@
+unwrap_parameters <- function(param_list){
+  param_list$L <- lkj::L_par(param_list$L)
+  unlist(param_list)
+}
+
+
+
+
+wrap_parameters <- function(param_vector){
+  lpar <- param_vector[ grep("L", names(param_vector) ) ]
+  param.list = list(mu =   param_vector[ grep("mu", names(param_vector) ) ],
+                    sigl = param_vector[ grep("sigl", names(param_vector) ) ] |> exp () ,
+                    sigr = param_vector[ grep("sigr", names(param_vector) ) ] |> exp (),
+                    c =  param_vector[ grep("c", names(param_vector) ) ],
+                    pd = param_vector[ grep("pd", names(param_vector) ) ] |> rje::expit() ,
+                    L = lkj::L_matrix(lpar) )
+
+  param.list
+}
+
+xsdm_log_lik <- function(param_vector, env, occ, opt = NULL){
+
+  ###
+
+  if(is.null(opt)){
+    opt = rep(NA, length(param_vector))
+  }
+
+  # Check if any of opt is not NA
+  if (any(!sapply(opt, is.na))) {
+    i = !sapply(opt, is.na)
+    # Fix non-NA values
+    param_vector[i] <- opt[i]
+  }
+
+  param_list <- wrap_parameters(param_vector)
+
+  ###
+
+  ts_data <- xsdm::envDataArray(occ = occ, envData = env)
+
+  P <- length(ts_data)
+
+  if(P == 1){
+
+    f <- function(env)function(mu, sigl, sigr, c, pd){
+      xsdm::prob_detec(env, mu, sigl, sigr, c, pd)}
+  } else {
+    f <- function(env)function(mu, sigl, sigr, c, pd, L){
+      xsdm::prob_detec(env, mu, sigl, sigr, c, pd, L)
+    }
+  }
+  f_par <- f(ts_data)
+  probs <- suppressWarnings(do.call(f_par, args = param_list))
+  loglik <- xsdm::bernoulli_lpmf(probs, occ$presence, lp_sum = TRUE)
+  #print(param_list)
+  loglik
+}
+
+xsdm_log_lik_neg <- function(param_vector, env, occ, opt = NULL){
+
+  ###
+
+  if(is.null(opt)){
+    opt = rep(NA, length(param_vector))
+  }
+
+  # Check if any of opt is not NA
+  if (any(!sapply(opt, is.na))) {
+    i = !sapply(opt, is.na)
+    # Fix non-NA values
+    param_vector[i] <- opt[i]
+  }
+
+  param_list <- wrap_parameters(param_vector)
+
+  ###
+
+  ts_data <- xsdm::envDataArray(occ = occ, envData = env)
+
+  P <- length(ts_data)
+
+  if(P == 1){
+
+    f <- function(env)function(mu, sigl, sigr, c, pd){
+      xsdm::prob_detec(env, mu, sigl, sigr, c, pd)}
+  } else {
+    f <- function(env)function(mu, sigl, sigr, c, pd, L){
+      xsdm::prob_detec(env, mu, sigl, sigr, c, pd, L)
+    }
+  }
+  f_par <- f(ts_data)
+  probs <- suppressWarnings(do.call(f_par, args = param_list))
+  loglik <- xsdm::bernoulli_lpmf(probs, occ$presence, lp_sum = TRUE)
+  #print(param_list)
+  -loglik
+}

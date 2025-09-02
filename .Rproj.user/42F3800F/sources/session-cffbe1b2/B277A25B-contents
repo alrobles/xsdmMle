@@ -1,0 +1,6 @@
+folder  <- "/Virtual_species_1"
+model_str = paste0("11",collapse="")
+sp = readRDS(paste0("/home/reumanlab/Documents/FitByLikelihoodRealSpecies", folder,"/StartParms_math_",model_str,".Rds"))
+tibble::as_tibble(sp)
+paramTableExample <- sp
+usethis::use_data(paramTableExample)

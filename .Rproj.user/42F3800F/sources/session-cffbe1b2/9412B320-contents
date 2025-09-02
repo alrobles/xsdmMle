@@ -1,0 +1,21 @@
+#' Build an orthogonal matrix given a set of real parameters
+#' @param entries A vector of entries to build the orthogonal matrix.
+#' @returns An orthogonal matrix of dimensions according to the given vector
+#' @export
+#'
+#' @examples
+#' build_O_matrix(0) #Identity
+#' build_O_matrix(2*pi)
+#' build_O_matrix(c(0.1, 0.2, -3))
+build_O_matrix <- function(entries){
+  #get number of matrix entries given the parameter vector
+  f <- function(n) 0.5 * (1 + sqrt(8 * n + 1))
+  k <- f(length(entries))
+  
+  sk <- matrix(0, nrow = k, ncol = k)
+  sk[lower.tri(sk)] <- as.numeric(entries)
+  sk = sk - t(sk)
+  O = expm::expm(sk)
+  return(O)
+}
+
