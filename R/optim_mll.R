@@ -14,10 +14,12 @@ optim_mll <- function(envdat, pa, parallel = FALSE, numstarts = 100){
   
   envdat_ex_occ <- envdat[ , , pa == 1] 
  
-  paramTable <-  startparms(envdat_ex_occ, numstarts = numstarts) 
+  paramTable <-  startparms(envdat_ex_occ, numstarts = numstarts)
+  #paramTable <- paramTableExample[ 1:5,]
   
 
   list_of_pars <- split(paramTable, seq(nrow(paramTable)))
+  #list_of_pars_test <- split(paramTable_test, seq(nrow(paramTable)))
   
   list_of_pars <- Map(unlist, list_of_pars)
   #function generating of functions
@@ -36,17 +38,16 @@ optim_mll <- function(envdat, pa, parallel = FALSE, numstarts = 100){
                          num_threads = 4,
                          hessian = FALSE)
     })
-
+    
     output <- c(res$par, value = -res$value, convergence = res$convergence)
+    return(output)
+    
   }
   
   f <- f_gen(envdat, pa)
-  # 
   
- 
-
   if(parallel){
-    with(future::plan(strategy = "multisession", workers = 16, local = TRUE))
+    with(future::plan(strategy = "multisession", workers = 16), local = TRUE)
 
     #future::plan(strategy = "multisession", workers = 16)
     res <- furrr::future_map(list_of_pars, \(x) f(x),
@@ -58,7 +59,12 @@ optim_mll <- function(envdat, pa, parallel = FALSE, numstarts = 100){
                           .progress = TRUE )
 
   }
-  res <- purrr::reduce(res, rbind)
+  res <- purrr::reduce(res, rbind) |>
+    as.data.frame() |>
+    tibble::as_tibble()
+  
+  res <- res[order(res$value, decreasing = TRUE), ]
+  res$index <- 1:nrow(res)
 
   return(res)
 }

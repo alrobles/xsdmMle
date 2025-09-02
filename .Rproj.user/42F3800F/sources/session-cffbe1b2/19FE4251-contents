@@ -1,6 +1,0 @@
-build_O_matrix(2*pi) - build_O_matrix(0) 
-
-build_O_matrix(-pi) |> round() 
-
-
-expit(10)

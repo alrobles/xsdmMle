@@ -63,9 +63,9 @@ get_range_df <- function(envdat, quant_vec = c(0.1, 0.5, 0.9) ){
   # nature of the exponential map.
   
   
-  ranges[O_inds, 1] = -10
+  ranges[O_inds, 1] = -pi
   ranges[O_inds, 2] = 0
-  ranges[O_inds, 3] = 10
+  ranges[O_inds, 3] = pi
   
   #pd parameters
   ranges[pd_inds,] = logit(quant_vec)
