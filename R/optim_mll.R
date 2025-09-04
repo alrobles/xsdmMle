@@ -46,14 +46,14 @@ optim_mll <- function(envdat, pa, parallel = FALSE, numstarts = 100){
   }
   
   f <- f_gen(envdat, pa)
-  future_workers <- 3*RcppParallel::defaultNumThreads() %/% 4
-  likelihood_threads <- RcppParallel::defaultNumThreads() %/% 4
+  #future_workers <- 3*RcppParallel::defaultNumThreads() %/% 4
+  #likelihood_threads <- RcppParallel::defaultNumThreads() %/% 4
   
   
   if(parallel){
     
     
-    with(future::plan(strategy = "multisession", workers = future_workers), local = TRUE)
+    with(future::plan(strategy = "multisession"), local = TRUE)
 
     #future::plan(strategy = "multisession", workers = 16)
     res <- furrr::future_map(list_of_pars, \(x) f(x),
