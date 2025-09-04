@@ -52,8 +52,7 @@ optim_mll <- function(envdat, pa, parallel = FALSE, numstarts = 100){
   
   if(parallel){
     
-    
-    with(future::plan(strategy = "multisession"), local = TRUE)
+    with(future::plan(future.callr::callr), local = TRUE)
 
     #future::plan(strategy = "multisession", workers = 16)
     res <- furrr::future_map(list_of_pars, \(x) f(x),

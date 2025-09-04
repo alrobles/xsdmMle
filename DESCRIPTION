@@ -13,6 +13,7 @@ Imports:
     expm,
     furrr,
     future,
+    future.callr,
     pomp,
     purrr,
     Rcpp,
