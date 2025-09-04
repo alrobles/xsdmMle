@@ -45,7 +45,7 @@ get_range_df <- function(envdat, quant_vec = c(0.1, 0.5, 0.9) ){
     #get the sigL range
     h2 = sqrt(mean( (h[ h < mu_center] - mu_center)^2) )
     ranges[sigLtil_inds[counter],] = log(c(h2/2, h2, 2* h2)) #the log is because we want these on the math scale
-
+    
     # h2_l <- sqrt( (h[ h < mu_center] - mu_center)^2) 
     # ranges[sigLtil_inds[counter], ] <- stats::quantile(h2_l, probs = quant_vec) |> log() #the log is because we want these on the math scale
     # 

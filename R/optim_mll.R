@@ -30,24 +30,30 @@ optim_mll <- function(envdat, pa, parallel = FALSE, numstarts = 100){
     #we switch sign with negative = TRUE flag
     
     suppressWarnings({
-    res <- ucminf::ucminf(par = params,
-                         fn  = loglik_orthog_nd_unconstr,
-                         envdat = envdat_,
-                         pa  = pa_,
-                         negative = TRUE,
-                         num_threads = 4,
-                         hessian = FALSE)
+      res <- ucminf::ucminf(par = params,
+                            fn  = loglik_orthog_nd_unconstr,
+                            envdat = envdat_,
+                            pa  = pa_,
+                            negative = TRUE,
+                            num_threads = 4,
+                            hessian = FALSE)
+      output <- c(res$par, value = -res$value, convergence = res$convergence)
+      
     })
     
-    output <- c(res$par, value = -res$value, convergence = res$convergence)
     return(output)
     
   }
   
   f <- f_gen(envdat, pa)
+  future_workers <- 3*RcppParallel::defaultNumThreads() %/% 4
+  likelihood_threads <- RcppParallel::defaultNumThreads() %/% 4
+  
   
   if(parallel){
-    with(future::plan(strategy = "multisession", workers = 16), local = TRUE)
+    
+    
+    with(future::plan(strategy = "multisession", workers = future_workers), local = TRUE)
 
     #future::plan(strategy = "multisession", workers = 16)
     res <- furrr::future_map(list_of_pars, \(x) f(x),
@@ -55,6 +61,7 @@ optim_mll <- function(envdat, pa, parallel = FALSE, numstarts = 100){
                                  .progress = TRUE)
     
   } else {
+    
     res <- purrr::map(list_of_pars, \(x) f(x),
                           .progress = TRUE )
 

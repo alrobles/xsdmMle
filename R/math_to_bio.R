@@ -13,6 +13,7 @@
 math_to_bio  <-function(param_vector){
   
   Opar <- param_vector[ grep("O", names(param_vector) ) ]
+  #Opar <- expit_gen(Opar, -pi, pi, 0)
   
   param.list = list(
     O = build_O_matrix(Opar),
