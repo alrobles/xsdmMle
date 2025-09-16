@@ -7,14 +7,15 @@
 #' @param numstarts Number of samples to start the optimizations. 
 #' @export
 #' @examples 
-#' optim_df <- optim_mll(envdat_ex[ , ,1:5], occExample[1:5], numstarts = 4)
+#' optim_df <- optim_mll(envdat_ex[ , ,1:4], occExample[1:4], numstarts = 4)
 #' 
 optim_mll <- function(envdat, pa, parallel = FALSE, numstarts = 100){
   
   
+  
   envdat_ex_occ <- envdat[ , , pa == 1] 
  
-  paramTable <-  startparms(envdat_ex_occ, numstarts = numstarts)
+  paramTable <-  startparms(envdat_ex_occ, numstarts = 5)
   #paramTable <- paramTableExample[ 1:5,]
   
 
@@ -35,7 +36,7 @@ optim_mll <- function(envdat, pa, parallel = FALSE, numstarts = 100){
                             envdat = envdat_,
                             pa  = pa_,
                             negative = TRUE,
-                            num_threads = 4,
+                            num_threads = RcppParallel::defaultNumThreads()%/%4,
                             hessian = FALSE)
       output <- c(res$par, value = -res$value, convergence = res$convergence)
       
@@ -46,6 +47,7 @@ optim_mll <- function(envdat, pa, parallel = FALSE, numstarts = 100){
   }
   
   f <- f_gen(envdat, pa)
+  
   #future_workers <- 3*RcppParallel::defaultNumThreads() %/% 4
   #likelihood_threads <- RcppParallel::defaultNumThreads() %/% 4
   

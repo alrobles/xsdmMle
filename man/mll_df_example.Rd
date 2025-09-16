@@ -17,6 +17,6 @@ A data.frame with 100 fitted optimizations
 of the maximum likelihood
 }
 \details{
-It helpts to test the methods for fitted objects
+It helps to test the methods for fitted objects
 }
 \keyword{datasets}

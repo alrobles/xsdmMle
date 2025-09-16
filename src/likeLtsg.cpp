@@ -46,11 +46,11 @@ struct ColumnWorker : public Worker {
 };
 
 // [[Rcpp::export(likeLtsg)]] 
-NumericVector likeLtsg(NumericMatrix orthoM,
+NumericVector likeLtsg(NumericVector mu,  
                    NumericMatrix envM,
                    NumericMatrix DL,
                    NumericMatrix DRL,
-                   NumericVector mu,
+                   NumericMatrix orthoM,
                    int q,
                    int r) {
   if (orthoM.ncol() != envM.nrow()) {

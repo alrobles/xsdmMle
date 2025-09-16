@@ -2,7 +2,8 @@
 % Please edit documentation in R/make_canonical.R
 \name{make_cannonical}
 \alias{make_cannonical}
-\title{Title}
+\title{This is used to calculated horizontal distance
+between parameters}
 \usage{
 make_cannonical(bparms)
 }
@@ -14,7 +15,8 @@ to adjust to a canonical form}
 A list  with parameters in canonical form
 }
 \description{
-Title
+This is used to calculated horizontal distance
+between parameters
 }
 \examples{
 

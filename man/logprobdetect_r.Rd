@@ -4,10 +4,10 @@
 \alias{logprobdetect_r}
 \title{Title}
 \usage{
-logprobdetect_r(O, mu, sigLtil, sigRtil, pd, ctil, envdat)
+logprobdetect_r(envdat, mu, sigLtil, sigRtil, ctil, pd, O)
 }
 \arguments{
-\item{O}{An orthogonal matrix}
+\item{envdat}{The environmental data array}
 
 \item{mu}{A vector of mu}
 
@@ -15,11 +15,11 @@ logprobdetect_r(O, mu, sigLtil, sigRtil, pd, ctil, envdat)
 
 \item{sigRtil}{A vector of sigr}
 
-\item{pd}{Probability of detection. Parameter between 0 and 1}
-
 \item{ctil}{C tilde parameter}
 
-\item{envdat}{The environmental data array}
+\item{pd}{Probability of detection. Parameter between 0 and 1}
+
+\item{O}{An orthogonal matrix}
 }
 \value{
 A numeric value of the log of the probability of detection
@@ -34,5 +34,5 @@ sigLtil = c(1.036834, 1.556083)
 sigRtil = c(1.538972, 1.458738)
 pd = 0.9
 ctil = -1
-M <- logprobdetect_r(O, mu, sigLtil, sigRtil, pd, ctil, envdat_ex)
+M <- logprobdetect_r( envdat_ex,  mu, sigLtil, sigRtil, ctil, pd, O )
 }

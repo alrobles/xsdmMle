@@ -4,5 +4,5 @@
 #' @format A data frame with fitted parameters, the 
 #' value of the likelihood function at numerical maximum
 #' and the flag for convergency
-#' @details It helpts to test the methods for fitted objects
+#' @details It helps to test the methods for fitted objects
 "mll_df_example"

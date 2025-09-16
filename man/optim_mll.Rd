@@ -21,6 +21,6 @@ envdat_ex_occ <- envdat_ex[ , , occExample == 1]
 startparms(envdat_ex_occ)
 }
 \examples{
-optim_df <- optim_mll(envdat_ex[ , ,1:5], occExample[1:5], numstarts = 4)
+optim_df <- optim_mll(envdat_ex[ , ,1:4], occExample[1:4], numstarts = 4)
 
 }

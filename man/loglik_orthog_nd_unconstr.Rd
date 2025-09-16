@@ -40,6 +40,7 @@ log likelihood orthogonal
 \examples{
 envdat <- envdat_ex
 pa <- occExample
-params <- paramTableExample[1, ]
+params <- paramTableExample[5, ]
+param_vector <- params
 loglik_orthog_nd_unconstr(params, envdat, pa)
 }

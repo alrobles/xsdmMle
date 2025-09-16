@@ -1,4 +1,5 @@
-#' Title
+#' This is used to calculated horizontal distance
+#' between parameters
 #'
 #' @param bparms  A list with parameters
 #' to adjust to a canonical form

@@ -18,7 +18,8 @@
 #' @examples
 #' envdat <- envdat_ex
 #' pa <- occExample
-#' params <- paramTableExample[1, ]
+#' params <- paramTableExample[5, ]
+#' param_vector <- params
 #' loglik_orthog_nd_unconstr(params, envdat, pa)
 loglik_orthog_nd_unconstr = function(param_vector, envdat, pa, opt = NULL, negative = TRUE, num_threads = RcppParallel::defaultNumThreads())
 {
@@ -41,8 +42,8 @@ loglik_orthog_nd_unconstr = function(param_vector, envdat, pa, opt = NULL, negat
   param_list <- math_to_bio(param_vector)
   
   
-  f <- function(env, occ)function(O, mu, sigLtil, sigRtil, pd, ctil){
-    loglik_orthog_nd(O, mu, sigLtil, sigRtil, pd, ctil, env, occ)
+  f <- function(env, occ)function(mu, sigLtil, sigRtil, ctil, pd, O){
+    loglik_orthog_nd(env, occ, mu, sigLtil, sigRtil, ctil, pd,  O)
   }
   f_par <- f(envdat, pa)
   res <- suppressWarnings(do.call(f_par, args = param_list))

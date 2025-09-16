@@ -1,10 +1,10 @@
 #' uasym
 #'
-#' @param O An orthogonal matrix
+#' @param envdat The environmental data array
 #' @param mu A vector of mu
 #' @param sigLtil A vector of sigl
 #' @param sigRtil A vector of sigr
-#' @param envdat The environmental data array
+#' @param O An orthogonal matrix
 #' @param num_threads The number of threads for parallel computing
 #' @returns A numeric value of the log of the likelihood function
 #' @export
@@ -14,9 +14,9 @@
 #' mu = c(11.433373, 5.046939)
 #' sigLtil = c(1.036834, 1.556083)
 #' sigRtil = c(1.538972, 1.458738)
-#' M <- like_neg_ltsgr_cpp(O, mu, sigLtil, sigLtil, envdat_ex)
+#' M <- like_neg_ltsgr_cpp(envdat_ex, mu, sigLtil, sigLtil, O)
 
-like_neg_ltsgr_cpp = function(O, mu, sigLtil, sigRtil, envdat, num_threads = RcppParallel::defaultNumThreads())
+like_neg_ltsgr_cpp = function(envdat, mu, sigLtil, sigRtil, O, num_threads = RcppParallel::defaultNumThreads())
 {
   
   # Set the desired number of threads for RcppParallel operations
@@ -42,11 +42,11 @@ like_neg_ltsgr_cpp = function(O, mu, sigLtil, sigRtil, envdat, num_threads = Rcp
   DRLinv <- DRinv -DLinv 
   
   res =  likeLtsg(
-    orthoM = t(O),
     envM = envdat_mat,
     mu = mu,
     DL = DLinv,
     DRL = DRLinv,
+    orthoM = t(O),
     q = tslen,
     r = n ) 
   

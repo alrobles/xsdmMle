@@ -4,10 +4,10 @@
 \alias{like_neg_ltsgr_r}
 \title{Title}
 \usage{
-like_neg_ltsgr_r(O, mu, sigLtil, sigRtil, envdat)
+like_neg_ltsgr_r(envdat, mu, sigLtil, sigRtil, O)
 }
 \arguments{
-\item{O}{An orthogonal matrix}
+\item{envdat}{The environmental data array}
 
 \item{mu}{A vector of mu}
 
@@ -15,18 +15,11 @@ like_neg_ltsgr_r(O, mu, sigLtil, sigRtil, envdat)
 
 \item{sigRtil}{A vector of sigr}
 
-\item{envdat}{The environmental data array}
+\item{O}{An orthogonal matrix}
 }
 \value{
 A numeric value of the log of the likelihood function
 }
 \description{
 Title
-}
-\examples{
-O = matrix(c(-0.4443546, 0.8958510, -0.8958510, -0.4443546), ncol = 2)
-mu = c(11.433373, 5.046939)
-sigLtil = c(1.036834, 1.556083)
-sigRtil = c(1.538972, 1.458738)
-M <- like_neg_ltsgr_r(O, mu, sigLtil, sigRtil, envdat_ex)
 }

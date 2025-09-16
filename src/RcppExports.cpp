@@ -11,19 +11,19 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // likeLtsg
-NumericVector likeLtsg(NumericMatrix orthoM, NumericMatrix envM, NumericMatrix DL, NumericMatrix DRL, NumericVector mu, int q, int r);
-RcppExport SEXP _xsdmMle_likeLtsg(SEXP orthoMSEXP, SEXP envMSEXP, SEXP DLSEXP, SEXP DRLSEXP, SEXP muSEXP, SEXP qSEXP, SEXP rSEXP) {
+NumericVector likeLtsg(NumericVector mu, NumericMatrix envM, NumericMatrix DL, NumericMatrix DRL, NumericMatrix orthoM, int q, int r);
+RcppExport SEXP _xsdmMle_likeLtsg(SEXP muSEXP, SEXP envMSEXP, SEXP DLSEXP, SEXP DRLSEXP, SEXP orthoMSEXP, SEXP qSEXP, SEXP rSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type orthoM(orthoMSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type mu(muSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type envM(envMSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type DL(DLSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type DRL(DRLSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type orthoM(orthoMSEXP);
     Rcpp::traits::input_parameter< int >::type q(qSEXP);
     Rcpp::traits::input_parameter< int >::type r(rSEXP);
-    rcpp_result_gen = Rcpp::wrap(likeLtsg(orthoM, envM, DL, DRL, mu, q, r));
+    rcpp_result_gen = Rcpp::wrap(likeLtsg(mu, envM, DL, DRL, orthoM, q, r));
     return rcpp_result_gen;
 END_RCPP
 }

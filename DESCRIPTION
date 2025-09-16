@@ -14,16 +14,18 @@ Imports:
     furrr,
     future,
     future.callr,
+    optimx,
     pomp,
     purrr,
     Rcpp,
     RcppParallel (>= 5.1.10),
     stats,
+    terra,
     tibble,
     ucminf
 LinkingTo: Rcpp, RcppParallel
 SystemRequirements: GNU make
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Encoding: UTF-8
 Depends: 
     R (>= 3.5)

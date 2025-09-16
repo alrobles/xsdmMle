@@ -22,5 +22,6 @@ get_start_parms <- function(ranges, numstarts = 100){
   # startparms_math_up = pomp::sobol_design(lower = center, upper = upper, nseq = numstarts/2)
   #startparms_math <- rbind(startparms_math_low, startparms_math_up)
   startparms_math <- pomp::sobol_design(lower = lower, upper = upper, nseq = numstarts - 1)
-  rbind(startparms_math, center)
+  startparms_math <- rbind(startparms_math, center)
+  startparms_math |> tibble::as_tibble()
 }

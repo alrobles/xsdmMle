@@ -29,5 +29,4 @@ for the parameters based on the Sobol' low-discrepancy sequence.
 \examples{
 envdat_ex_occ <- envdat_ex[ , , occExample == 1] 
 startparms(envdat_ex_occ)
-
 }

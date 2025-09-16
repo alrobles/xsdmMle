@@ -1,12 +1,12 @@
 #' Title
-#'
-#' @param O An orthogonal matrix
+#' @param envdat The environmental data array
 #' @param mu A vector of mu
 #' @param sigLtil A vector of sigl
 #' @param sigRtil A vector of sigr
-#' @param pd Probability of detection. Parameter between 0 and 1
 #' @param ctil C tilde parameter 
-#' @param envdat The environmental data array
+#' @param pd Probability of detection. Parameter between 0 and 1
+#' @param O An orthogonal matrix
+
 #' @returns A numeric value of the log of the probability of detection
 #' @export
 #'
@@ -17,9 +17,10 @@
 #' sigRtil = c(1.538972, 1.458738)
 #' pd = 0.9
 #' ctil = -1
-#' M <- logprobdetect_r(O, mu, sigLtil, sigRtil, pd, ctil, envdat_ex)
-logprobdetect_r = function(O, mu, sigLtil, sigRtil, pd, ctil, envdat){
-  h <-  like_neg_ltsgr_r(O, mu, sigLtil, sigRtil, envdat)
+#' M <- logprobdetect_r( envdat_ex,  mu, sigLtil, sigRtil, ctil, pd, O )
+logprobdetect_r = function(envdat, mu, sigLtil, sigRtil, ctil, pd, O){
+  
+  h <-  like_neg_ltsgr_r(envdat, mu, sigLtil, sigRtil, O)
   
   #Get probability of detection
   #pdetect = pd/(1+exp(ctil+h)) #this is what you want, but you want to compute it originally on the log scale

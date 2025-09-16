@@ -1,22 +1,13 @@
 #' Title
 #'
-#' @param O An orthogonal matrix
+#' @param envdat The environmental data array
 #' @param mu A vector of mu
 #' @param sigLtil A vector of sigl
 #' @param sigRtil A vector of sigr
-#' @param envdat The environmental data array
+#' @param O An orthogonal matrix
 #'
 #' @returns A numeric value of the log of the likelihood function
-#' @export
-#'
-#' @examples
-#' O = matrix(c(-0.4443546, 0.8958510, -0.8958510, -0.4443546), ncol = 2)
-#' mu = c(11.433373, 5.046939)
-#' sigLtil = c(1.036834, 1.556083)
-#' sigRtil = c(1.538972, 1.458738)
-#' M <- like_neg_ltsgr_r(O, mu, sigLtil, sigRtil, envdat_ex)
-
-like_neg_ltsgr_r = function(O, mu, sigLtil, sigRtil, envdat)
+like_neg_ltsgr_r = function(envdat, mu, sigLtil, sigRtil, O)
 {
   #get various dimensions for convenience
   n_old = dim(envdat)[3] #number of locations with detections or nondetections

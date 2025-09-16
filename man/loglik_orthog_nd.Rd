@@ -5,19 +5,23 @@
 \title{Logarithm of the likelihood oof detection of a species}
 \usage{
 loglik_orthog_nd(
-  O,
+  envdat,
+  pa,
   mu,
   sigLtil,
   sigRtil,
-  pd,
   ctil,
-  envdat,
-  pa,
-  num_threads = RcppParallel::defaultNumThreads()
+  pd,
+  O,
+  num_threads = RcppParallel::defaultNumThreads(),
+  sum_logp = TRUE,
+  return_prob = FALSE
 )
 }
 \arguments{
-\item{O}{An orthogonal matrix}
+\item{envdat}{The environmental data array}
+
+\item{pa}{Presence absence binary vector}
 
 \item{mu}{A vector of mu}
 
@@ -25,15 +29,19 @@ loglik_orthog_nd(
 
 \item{sigRtil}{A vector of sigr}
 
-\item{pd}{Probability of detection. Parameter between 0 and 1}
-
 \item{ctil}{C tilde parameter}
 
-\item{envdat}{The environmental data array}
+\item{pd}{Probability of detection. Parameter between 0 and 1}
 
-\item{pa}{Presence absence binary vector}
+\item{O}{An orthogonal matrix}
 
 \item{num_threads}{The number of threads for parallel computing}
+
+\item{sum_logp}{Logical (default TRUE) returns the sum of log of probability 
+detection}
+
+\item{return_prob}{Logical (default FALSE) returns the probability of detections
+instead the log of proabilities}
 }
 \value{
 The value of the logarithm of the likelihood function in the 
@@ -53,6 +61,7 @@ ctil <- paramListExample$ctil
 envdat <- envdat_ex
 pa <- occExample
 
-ll <- loglik_orthog_nd(O = O, mu = mu, sigLtil = sigLtil,sigRtil =  sigLtil, pd = pd, ctil = ctil, 
-envdat_ex, pa )
+ll <- loglik_orthog_nd(envdat_ex, pa , mu = mu, sigLtil = sigLtil,
+sigRtil =  sigLtil, ctil = ctil, pd = pd, O = O)  
+
 }
