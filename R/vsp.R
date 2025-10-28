@@ -3,15 +3,13 @@
 #' @param envData A list of time serires rasters of bioclimatic variables
 #' @param param_list A list of parameters
 #'
-#' @returns
-#' 
-
+#' @returns A raster with a virtual species probability of detection
 vsp <- function(envData, param_list){
   
   envM <- envDataArray(envData)
   
   f <- function(env)function(mu, sigl, sigr, c, pd, O){
-    logprobdetect(env, mu, sigl, sigr, c, pd, O)
+          logprobdetect(env, mu, sigl, sigr, c, pd, O)
   }
   if(is.null(param_list)){
     stop("Provide a valid parameter list")
@@ -21,7 +19,12 @@ vsp <- function(envData, param_list){
   
   coords <- terra::crds(envData[[1]])
   crs_val <- terra::crs(envData[[1]])
-  probs <- suppressWarnings(do.call(f_par, args = param_list))
+  probs <- suppressWarnings(
+    do.call(
+      f_par,
+      args = param_list))
+  probs <- exp(probs)
   data.frame(coords, probs)|>
     terra::rast(crs = crs_val)
+  
 }

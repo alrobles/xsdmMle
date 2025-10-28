@@ -26,6 +26,8 @@ envDataArray <- function(envData, occ = NULL){
       envDataArray <- Map(f = \(x){stats::setNames(x, paste0(names(x)[[1]], "_", 1:ncol(x)))}, envDataArray)
       envDataArray <- Map(f = as.matrix, envDataArray)
       envDataArray <- simplify2array(envDataArray)
+      #temporary rotate the array to fit with the xsdmMle
+      envDataArray <- aperm(envDataArray)
     }
     
   } else {

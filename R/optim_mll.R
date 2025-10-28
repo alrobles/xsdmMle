@@ -11,25 +11,20 @@
 #' 
 optim_mll <- function(envdat, pa, parallel = FALSE, numstarts = 100){
   
-  
-  
   envdat_ex_occ <- envdat[ , , pa == 1] 
  
-  paramTable <-  startparms(envdat_ex_occ, numstarts = 5)
-  #paramTable <- paramTableExample[ 1:5,]
+  paramTable <-  startparms(envdat_ex_occ, numstarts = numstarts)
   
-
   list_of_pars <- split(paramTable, seq(nrow(paramTable)))
-  #list_of_pars_test <- split(paramTable_test, seq(nrow(paramTable)))
   
   list_of_pars <- Map(unlist, list_of_pars)
   #function generating of functions
   # useful to pass the enviroinmental parameters and creates a function
   # that catch the parameters in the parallelization
+  
   f_gen <- function(envdat_, pa_)function(params){
     #minimization with ucminf algorithm.
     #we switch sign with negative = TRUE flag
-    
     suppressWarnings({
       res <- ucminf::ucminf(par = params,
                             fn  = loglik_orthog_nd_unconstr,
@@ -38,7 +33,8 @@ optim_mll <- function(envdat, pa, parallel = FALSE, numstarts = 100){
                             negative = TRUE,
                             num_threads = RcppParallel::defaultNumThreads()%/%4,
                             hessian = FALSE)
-      output <- c(res$par, value = -res$value, convergence = res$convergence)
+      output <- c(res$par, value = -res$value,
+                  convergence = res$convergence)
       
     })
     
@@ -48,15 +44,10 @@ optim_mll <- function(envdat, pa, parallel = FALSE, numstarts = 100){
   
   f <- f_gen(envdat, pa)
   
-  #future_workers <- 3*RcppParallel::defaultNumThreads() %/% 4
-  #likelihood_threads <- RcppParallel::defaultNumThreads() %/% 4
-  
-  
   if(parallel){
     
     with(future::plan(future.callr::callr), local = TRUE)
 
-    #future::plan(strategy = "multisession", workers = 16)
     res <- furrr::future_map(list_of_pars, \(x) f(x),
                                  .options = furrr::furrr_options(seed = NULL),
                                  .progress = TRUE)
@@ -70,9 +61,7 @@ optim_mll <- function(envdat, pa, parallel = FALSE, numstarts = 100){
   res <- purrr::reduce(res, rbind) |>
     as.data.frame() |>
     tibble::as_tibble()
-  
   res <- res[order(res$value, decreasing = TRUE), ]
   res$index <- 1:nrow(res)
-
-  return(res)
+ return(res)
 }
