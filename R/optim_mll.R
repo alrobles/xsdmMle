@@ -32,6 +32,12 @@ optim_mll <- function(envdat, pa, parallel = FALSE, numstarts = 100){
                             pa  = pa_,
                             negative = TRUE,
                             num_threads = RcppParallel::defaultNumThreads()%/%4,
+                            control = list(
+                              grtol = 1e-4,       # Looser gradient tolerance
+                              xtol = 1e-8,        # Looser parameter tolerance
+                              maxeval = 1000,     # More function evaluations
+                              grad = "central"    # Use central differences if analytical grad fails
+                            ),
                             hessian = FALSE)
       output <- c(res$par, value = -res$value,
                   convergence = res$convergence)

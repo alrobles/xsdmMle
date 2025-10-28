@@ -21,33 +21,39 @@ remotes::install_github("alrobles/xsdmMle")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example to fit the distribution of a species:
 
 ``` r
 library(xsdmMle)
-## basic example code
+## 01 We read the rasters for our example
+
+bio1_ts <- terra::unwrap(cmcc_cm_bio1)
+bio12_ts <- terra::unwrap(cmcc_cm_bio12)
+
+# 02 We transform the raster of precipitation to a similar scale of temperature
+bio12_ts <- bio12_ts/100
+
+# 03 We create a list of raster time series
+envData <- list(bio1 = bio1_ts, bio12 = bio12_ts)
+
+# 04 we create a data array providing the list of environmental data and the occurence
+# data frame (sp_virtual_example)
+envdat <- envDataArray(envData, occ = sp_virtual_example)
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+Following this we fit using the function optim_mll:
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+# 01 We store the presence absence vector
+occ <- sp_virtual_example$presence
+
+# 03 Then we provide the environmental data array and the occ vector in the optim_mll.
+# We can set parameters here like the number of initial points, or the flag if 
+# we want to run in parallel
+optim_df <- optim_mll(envdat, occ, numstarts = 50, parallel = TRUE)
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+\`\`\` The we got a data frame with the maximum likelihood estimation
+for each set of initial starting points in the optimization. We have
+this on the biological scale of parameters (Is the unconstrained space
+of parameters where the optimizer found the maximum of the function).
