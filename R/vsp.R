@@ -6,7 +6,7 @@
 #' @returns A raster with a virtual species probability of detection
 vsp <- function(envData, param_list){
   
-  envM <- envDataArray(envData)
+  envM <- extract_raster_to_array(envData)
   
   f <- function(env)function(mu, sigl, sigr, c, pd, O){
           logprobdetect(env, mu, sigl, sigr, c, pd, O)
