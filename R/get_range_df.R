@@ -80,7 +80,7 @@ get_range_df <- function(envdat, quant_vec = c(0.1, 0.5, 0.9) ){
   # the other half will be > 0.5.
   # 3. Pick the lower and upper ctil based on quantiles of the distribution
   
-  O_star <- build_O_matrix( ranges[O_inds, 2] )
+  O_star <- build_ortho_matrix( ranges[O_inds, 2] )
   mu_star <- ranges[mu_inds, 2]
   sigLtil_star <- exp(ranges[sigLtil_inds, 2])
   sigRtil_star <- exp(ranges[sigRtil_inds, 2])
