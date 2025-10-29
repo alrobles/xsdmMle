@@ -1,20 +1,17 @@
-#' Get range data frame.
+#' Guess range of parameters
 #' 
-#' Creates a unfilled data frame to store the parameter ranges 
-#' given a number of environmental variables
+#' Guess the range, i.e. the lower and upper values, of the parameters
+#'  of the XSDM model.
 #' 
-#' 
-#' @param envdat An environmental array with dimenssions P x M x N, where
+#' Ranges are guessed based on the environmental data of the presence records.
+#' @param envdat An environmental array with dimensions P x M x N, where
 #'  P is the number of environmental variables, M the length of the time series
-#'  and N the number of locations.
-#' ?
-#' Should provide an environmental array where the detections are possitive
-#' ?
-#'
+#'  and N the number of locations. Locations should be only locations where the
+#'  species has been observed to be present.
 #' @param quant_vec A vector of quantiles to limit the range of the
-#'  parameters given the occurrence in the environmental time serires.
+#'  parameters given the occurrence in the environmental time series.
 #'  Default is set to c(0.1, 0.5, 0.9) to center in the median value
-#' @returns A data.frame with NA three columns, lower bound, center and
+#' @returns A data.frame with three columns of lower bound, center, and
 #'  upper bound of the range of the parameters.
 guess_parameters_range <- function(envdat, quant_vec = c(0.1, 0.5, 0.9) ){
   p <- dim(envdat)[1]

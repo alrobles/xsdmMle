@@ -1,12 +1,16 @@
-#' get_start_parms. Generates a Latin hypercube design for the parameters
-#' based on the Sobol' low-discrepancy sequence. 
-#' Given a set of ranges of environmental variables create a sample
-#' of parameters. 
+#' Guess starting value of parameters
+#' 
+#' Guess the starting values of the parameters of the XSDM model.
 #'
-#' @param ranges A data frame with ranges to generate the parameter hypercube of parameters
+#' Generates a Latin hypercube design for the parameters based on 
+#'  the Sobol' low-discrepancy sequence.
+#'
+#' @param ranges A data frame with ranges to generate the parameter hypercube
+#'  of parameters
 #' @param numstarts The number of require samples
 #'
-#' @returns A data frame with colums the parameters and  numstarts rows of parameters
+#' @returns A data frame with columns the guessed parameters and numstarts rows 
+#'  of parameters.
 guess_starting_parms <- function(ranges, numstarts = 100){
   
   # infer actual start parameters, math (?) scale
