@@ -11,8 +11,7 @@
 #' expit(0)
 #' expit(0.5)
 #' expit(-1)
-expit <- function (x) 
-{
+expit <- function (x) {
   out <- exp(x) / (1 + exp(x))
   # out[x > 100] <- 1 # why needed?
   return(out)

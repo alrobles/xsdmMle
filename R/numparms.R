@@ -9,9 +9,9 @@
 #' @returns An integer with the number of parameters
 #'
 numparms <- function(p){
-  # ctil
   # orthogonal matrix 
   # mu, sigL and sigR params
+  # ctil
   # pd
   1 + (p^2 - p)/2 + 3 * p + 1
 }

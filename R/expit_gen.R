@@ -13,7 +13,7 @@
 #'
 #' @examples
 #' expit_gen(3, -pi, pi, 0)
-expit_gen <- function(x, L, U, x0){
+expit_gen <- function(x, L, U, x0) {
   
   out <- L + (U - L)/(1 + exp(-(x - x0)))
   # why the next two lines needed?
