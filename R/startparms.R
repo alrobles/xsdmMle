@@ -15,6 +15,6 @@
 #' envdat_ex_occ <- envdat_ex[ , , occExample == 1] 
 #' startparms(envdat_ex_occ)
 startparms <- function(envdat, quant_vec = c(0.1, 0.5, 0.9), numstarts = 100){
-  range_df <- get_range_df(envdat, quant_vec)
+  range_df <- guess_parameters_range(envdat, quant_vec)
   get_start_parms(range_df, numstarts)
 }

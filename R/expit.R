@@ -1,9 +1,10 @@
-#' Functions to take the expit of numerical vectors.
-#' expit exp(x)/(1 + exp(x))
+#' Standard logistic function
 #'
-#' @param x A numeric value
+#' Standard logistic function, also called expit.
 #'
-#' @returns A real vector corresponding to the expits of x
+#' @param x Numeric
+#'
+#' @returns The expit of `x`
 #' @export
 #'
 #' @examples
@@ -12,7 +13,7 @@
 #' expit(-1)
 expit <- function (x) 
 {
-  out <- exp(x)/(1 + exp(x))
-  out[x > 100] <- 1
+  out <- exp(x) / (1 + exp(x))
+  # out[x > 100] <- 1 # why needed?
   return(out)
 }
