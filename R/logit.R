@@ -1,4 +1,4 @@
-#' logit function. Inverse of the expit function
+#' Logit function. Inverse of the expit function.
 #'
 #' @param x A numeric value to scale from 0 to 1 to -inf to inf
 #'
