@@ -10,20 +10,20 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// likeLtsg
-NumericVector likeLtsg(NumericVector mu, NumericMatrix envM, NumericMatrix DL, NumericMatrix DRL, NumericMatrix orthoM, int q, int r);
-RcppExport SEXP _xsdmMle_likeLtsg(SEXP muSEXP, SEXP envMSEXP, SEXP DLSEXP, SEXP DRLSEXP, SEXP orthoMSEXP, SEXP qSEXP, SEXP rSEXP) {
+// like_ltsg
+NumericVector like_ltsg(NumericVector mu, NumericMatrix env_m, NumericMatrix dl_mat, NumericMatrix drl_mat, NumericMatrix ortho_m, int q, int r);
+RcppExport SEXP _xsdmMle_like_ltsg(SEXP muSEXP, SEXP env_mSEXP, SEXP dl_matSEXP, SEXP drl_matSEXP, SEXP ortho_mSEXP, SEXP qSEXP, SEXP rSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type mu(muSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type envM(envMSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type DL(DLSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type DRL(DRLSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type orthoM(orthoMSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type env_m(env_mSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type dl_mat(dl_matSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type drl_mat(drl_matSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type ortho_m(ortho_mSEXP);
     Rcpp::traits::input_parameter< int >::type q(qSEXP);
     Rcpp::traits::input_parameter< int >::type r(rSEXP);
-    rcpp_result_gen = Rcpp::wrap(likeLtsg(mu, envM, DL, DRL, orthoM, q, r));
+    rcpp_result_gen = Rcpp::wrap(like_ltsg(mu, env_m, dl_mat, drl_mat, ortho_m, q, r));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -40,7 +40,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_xsdmMle_likeLtsg", (DL_FUNC) &_xsdmMle_likeLtsg, 7},
+    {"_xsdmMle_like_ltsg", (DL_FUNC) &_xsdmMle_like_ltsg, 7},
     {"_xsdmMle_parallelVectorSum", (DL_FUNC) &_xsdmMle_parallelVectorSum, 1},
     {NULL, NULL, 0}
 };

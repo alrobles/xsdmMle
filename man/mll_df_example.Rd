@@ -5,7 +5,7 @@
 \alias{mll_df_example}
 \title{Fitted maximum liklihood example}
 \format{
-A data frame with fitted parameters, the 
+A data frame with fitted parameters, the
 value of the likelihood function at numerical maximum
 and the flag for convergency
 }

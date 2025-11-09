@@ -9,7 +9,7 @@
 #' further used to profile the optimization
 #' @param negative Logical. If true returns the negative of the log likelihood function.
 #' Flag set when optimize
-#' @param num_threads The number of threads to run the main function 
+#' @param num_threads The number of threads to run the main function
 #'
 #' @returns A value with the log of the likelihood for a given set of parameters, environmental
 #' variables and presence-absences ocurrencies.
@@ -21,38 +21,37 @@
 #' params <- paramTableExample[5, ]
 #' param_vector <- params
 #' loglik_orthog_nd_unconstr(params, envdat, pa)
-loglik_orthog_nd_unconstr = function(param_vector, envdat, pa, opt = NULL, negative = TRUE, num_threads = RcppParallel::defaultNumThreads())
-{
-  
+loglik_orthog_nd_unconstr <- function(param_vector, envdat, pa, opt = NULL, negative = TRUE, num_threads = RcppParallel::defaultNumThreads()) {
   # Set the desired number of threads for RcppParallel operations
   RcppParallel::setThreadOptions(numThreads = num_threads)
-  
-  if(is.null(opt)){
-    opt = rep(NA, length(param_vector))
+
+  if (is.null(opt)) {
+    opt <- rep(NA, length(param_vector))
   }
-  
+
   # Check if any of opt is not NA
   if (any(!sapply(opt, is.na))) {
-    i = !sapply(opt, is.na)
+    i <- !sapply(opt, is.na)
     # Fix non-NA values
     param_vector[i] <- opt[i]
   }
-  
-  #prep param
+
+  # prep param
   param_list <- math_to_bio(param_vector)
-  
-  
-  f <- function(env, occ)function(mu, sigLtil, sigRtil, ctil, pd, O){
-    loglik_orthog_nd(env, occ, mu, sigLtil, sigRtil, ctil, pd,  O)
+
+
+  f <- function(env, occ) {
+    function(mu, sigl, sigr, ctil, pd, o_mat) {
+      loglik_orthog_nd(env, occ, mu, sigl, sigr, ctil, pd, o_mat)
+    }
   }
   f_par <- f(envdat, pa)
   res <- suppressWarnings(do.call(f_par, args = param_list))
-  
+
   RcppParallel::setThreadOptions(numThreads = RcppParallel::defaultNumThreads())
-  if(negative != TRUE){
+  if (negative != TRUE) {
     return(res)
   } else {
     return(-res)
   }
-
 }

@@ -7,11 +7,11 @@
 logprobdetect(
   envdat,
   mu,
-  sigLtil,
-  sigRtil,
+  sigl,
+  sigr,
   ctil,
   pd,
-  O,
+  o_mat,
   return_prob = FALSE,
   num_threads = RcppParallel::defaultNumThreads()
 )
@@ -21,15 +21,15 @@ logprobdetect(
 
 \item{mu}{A vector of mu}
 
-\item{sigLtil}{A vector of sigl}
+\item{sigl}{A vector of sigl}
 
-\item{sigRtil}{A vector of sigr}
+\item{sigr}{A vector of sigr}
 
 \item{ctil}{C tilde parameter}
 
 \item{pd}{Probability of detection. Parameter between 0 and 1}
 
-\item{O}{An orthogonal matrix}
+\item{o_mat}{An orthogonal matrix}
 
 \item{return_prob}{Logical (default FALSE) Flag to return
 probability of detection instead the log of probability of detection}
@@ -43,11 +43,11 @@ A numeric value of the the probability (or log prob) of detection
 Title
 }
 \examples{
-mu = c(11.433373, 5.046939)
-sigLtil = c(1.036834, 1.556083)
-sigRtil = c(1.538972, 1.458738)
-ctil = -2
-pd = 0.9
-O = matrix(c(-0.4443546, 0.8958510, -0.8958510, -0.4443546), ncol = 2)
-M <- logprobdetect(envdat_ex, mu, sigRtil, sigRtil,ctil, pd, O)
+mu <- c(11.433373, 5.046939)
+sigl <- c(1.036834, 1.556083)
+sigr <- c(1.538972, 1.458738)
+ctil <- -2
+pd <- 0.9
+o_mat <- matrix(c(-0.4443546, 0.8958510, -0.8958510, -0.4443546), ncol = 2)
+M <- logprobdetect(envdat_ex, mu, sigl, sigl, ctil, pd, o_mat)
 }

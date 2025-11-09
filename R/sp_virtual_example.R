@@ -6,6 +6,6 @@
 #'   \item{\code{latitude}}{double COLUMN_DESCRIPTION}
 #'   \item{\code{longitude}}{double COLUMN_DESCRIPTION}
 #'   \item{\code{presence}}{double COLUMN_DESCRIPTION}
-#'}
+#' }
 #' @details DETAILS
 "sp_virtual_example"

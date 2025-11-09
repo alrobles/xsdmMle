@@ -28,11 +28,11 @@ A numeric value of the log of the probability of detection
 Title
 }
 \examples{
-O = matrix(c(-0.4443546, 0.8958510, -0.8958510, -0.4443546), ncol = 2)
-mu = c(11.433373, 5.046939)
-sigLtil = c(1.036834, 1.556083)
-sigRtil = c(1.538972, 1.458738)
-pd = 0.9
-ctil = -1
-M <- logprobdetect_r( envdat_ex,  mu, sigLtil, sigRtil, ctil, pd, O )
+O <- matrix(c(-0.4443546, 0.8958510, -0.8958510, -0.4443546), ncol = 2)
+mu <- c(11.433373, 5.046939)
+sigLtil <- c(1.036834, 1.556083)
+sigRtil <- c(1.538972, 1.458738)
+pd <- 0.9
+ctil <- -1
+M <- logprobdetect_r(envdat_ex, mu, sigLtil, sigRtil, ctil, pd, O)
 }

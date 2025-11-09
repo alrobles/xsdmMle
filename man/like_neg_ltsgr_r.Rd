@@ -2,7 +2,7 @@
 % Please edit documentation in R/like_neg_ltsgr_r.R
 \name{like_neg_ltsgr_r}
 \alias{like_neg_ltsgr_r}
-\title{Title}
+\title{Log-Likelihood Function for Asymmetric Environmental Long Stochastic Growth}
 \usage{
 like_neg_ltsgr_r(envdat, mu, sigLtil, sigRtil, O)
 }
@@ -21,5 +21,5 @@ like_neg_ltsgr_r(envdat, mu, sigLtil, sigRtil, O)
 A numeric value of the log of the likelihood function
 }
 \description{
-Title
+Log-Likelihood Function for Asymmetric Environmental Long Stochastic Growth
 }

@@ -5,10 +5,10 @@
 \title{Get range data frame. Creates a unfilled data frame
 to store the parameter ranges given a number of environmental variables}
 \usage{
-get_range_df(envdat, quant_vec = c(0.1, 0.5, 0.9))
+get_range_df(env_dat, quant_vec = c(0.1, 0.5, 0.9))
 }
 \arguments{
-\item{envdat}{An environmental array with dimenssions given by 
+\item{env_dat}{An environmental array with dimenssions given by
 environmental variables, time serires steps and locations.
 Should provide an environmental array where the detections are possitive}
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/logit.R
 \name{logit}
 \alias{logit}
-\title{logit function. Inverse of the expit function}
+\title{Logit function. Inverse of the expit function.}
 \usage{
 logit(x)
 }
@@ -13,7 +13,7 @@ logit(x)
 A numeric
 }
 \description{
-logit function. Inverse of the expit function
+Logit function. Inverse of the expit function.
 }
 \examples{
 logit(0.5)

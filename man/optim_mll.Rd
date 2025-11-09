@@ -2,7 +2,7 @@
 % Please edit documentation in R/optim_mll.R
 \name{optim_mll}
 \alias{optim_mll}
-\title{envdat_ex_occ <- envdat_ex[ , , occExample == 1] 
+\title{envdat_ex_occ <- envdat_ex[ , , occExample == 1]
 startparms(envdat_ex_occ)}
 \usage{
 optim_mll(envdat, pa, parallel = FALSE, numstarts = 100)
@@ -17,10 +17,10 @@ optim_mll(envdat, pa, parallel = FALSE, numstarts = 100)
 \item{numstarts}{Number of samples to start the optimizations.}
 }
 \description{
-envdat_ex_occ <- envdat_ex[ , , occExample == 1] 
+envdat_ex_occ <- envdat_ex[ , , occExample == 1]
 startparms(envdat_ex_occ)
 }
 \examples{
-optim_df <- optim_mll(envdat_ex[ , ,1:4], occExample[1:4], numstarts = 4)
+optim_df <- optim_mll(envdat_ex[, , 1:4], occExample[1:4], numstarts = 4)
 
 }

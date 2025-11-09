@@ -5,17 +5,17 @@
 \alias{envdat_new_ex}
 \title{Environmental array}
 \format{
-An array with with dimensions 2000, 39 and 2:
+An array with with dimensions 2000, 39 and 2.
 }
 \usage{
 envdat_new_ex
 }
 \description{
-An array of a time series of 30 years of bio1 and bio12 bioclimatic
-variables
+An array of a time series of 30 years of bio1 and bio12
+bioclimatic variables
 }
 \details{
-the dimenssion 2 correspond to 2000 sites, 39 time series steps
+the dimension 2 correspond to 2000 sites, 39 time series steps
 and 2 bioclimatic variables.
 }
 \keyword{datasets}

@@ -3,23 +3,25 @@
 \name{get_start_parms}
 \alias{get_start_parms}
 \title{get_start_parms. Generates a Latin hypercube design for the parameters
-based on the Sobol' low-discrepancy sequence. 
+based on the Sobol' low-discrepancy sequence.
 Given a set of ranges of environmental variables create a sample
 of parameters.}
 \usage{
 get_start_parms(ranges, numstarts = 100)
 }
 \arguments{
-\item{ranges}{A data frame with ranges to generate the parameter hypercube of parameters}
+\item{ranges}{A data frame with ranges to generate the parameter hypercube
+of parameters}
 
 \item{numstarts}{The number of require samples}
 }
 \value{
-A data frame with colums the parameters and  numstarts rows of parameters
+A data frame with columns the parameters and rows the number of sets
+of starting parameters
 }
 \description{
 get_start_parms. Generates a Latin hypercube design for the parameters
-based on the Sobol' low-discrepancy sequence. 
+based on the Sobol' low-discrepancy sequence.
 Given a set of ranges of environmental variables create a sample
 of parameters.
 }
