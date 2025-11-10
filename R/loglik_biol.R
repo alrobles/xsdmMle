@@ -39,7 +39,7 @@
 #'   o_mat = o_mat
 #' )
 #' ll
-loglik_orthog <- function(env_dat, occ, mu, sigl, sigr, ctil, pd, o_mat,
+loglik_biol <- function(env_dat, occ, mu, sigl, sigr, ctil, pd, o_mat,
                              num_threads = RcppParallel::defaultNumThreads(),
                              sum_logp = TRUE,
                              return_prob = FALSE) {
