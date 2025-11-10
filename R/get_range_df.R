@@ -75,8 +75,10 @@ get_range_df <- function(env_dat, quant_vec = c(0.1, 0.5, 0.9)) {
   sigr_star <- exp(ranges[sigr_inds, 2])
   h_star <- like_neg_ltsgr_cpp(env_dat, mu_star, sigl_star, sigr_star, o_star)
   ranges[ctil_inds, ] <- -stats::quantile(h_star, rev(quant_vec))
-  ranges <- ranges[c(mu_inds, sigl_inds, sigr_inds,
-                     ctil_inds, pd_inds, o_inds), ]
+  ranges <- ranges[c(
+    mu_inds, sigl_inds, sigr_inds,
+    ctil_inds, pd_inds, o_inds
+  ), ]
 
   ranges
 }

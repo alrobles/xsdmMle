@@ -15,11 +15,13 @@
 #' mu <- c(11.433373, 5.046939)
 #' sigl <- c(1.036834, 1.556083)
 #' sigr <- c(1.538972, 1.458738)
-#' M <- like_neg_ltsgr_cpp(env_dat = envdat_ex,
-#' mu = mu,
-#' sigl = sigl,
-#' sigr = sigl,
-#' o_mat = o_mat)
+#' M <- like_neg_ltsgr_cpp(
+#'   env_dat = envdat_ex,
+#'   mu = mu,
+#'   sigl = sigl,
+#'   sigr = sigl,
+#'   o_mat = o_mat
+#' )
 like_neg_ltsgr_cpp <- function(env_dat,
                                mu,
                                sigl,

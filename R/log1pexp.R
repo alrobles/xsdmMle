@@ -11,7 +11,7 @@
 #' @export
 #'
 #' @examples
-#' x <- seq(700, 720, by=2)
+#' x <- seq(700, 720, by = 2)
 #' cbind(x, log1p(exp(x)), log1pexp(x))
 log1pexp <- function(x, c0 = -37, c1 = 18, c2 = 33.3) {
   if (has_na <- any(ina <- is.na(x))) {
@@ -19,12 +19,15 @@ log1pexp <- function(x, c0 = -37, c1 = 18, c2 = 33.3) {
     x <- x[ok <- !ina]
   }
   r <- exp(x)
-  if (any(i <- c0 < x & (i1 <- x <= c1)))
+  if (any(i <- c0 < x & (i1 <- x <= c1))) {
     r[i] <- log1p(r[i])
-  if (any(i <- !i1 & (i2 <- x <= c2)))
+  }
+  if (any(i <- !i1 & (i2 <- x <= c2))) {
     r[i] <- x[i] + 1 / r[i]
-  if (any(i3 <- !i2))
+  }
+  if (any(i3 <- !i2)) {
     r[i3] <- x[i3]
+  }
   if (has_na) {
     y[ok] <- r
     y

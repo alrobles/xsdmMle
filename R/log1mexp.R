@@ -10,12 +10,13 @@
 #' @export
 #'
 #' @examples
-#' a <- 2^seq(-58,10, length = 256)
+#' a <- 2^seq(-58, 10, length = 256)
 #' f_expr <- expression(
-#' log(1 - exp(-a)),
-#' log(-expm1(-a)),
-#' log1p(-exp(-a)),
-#' log1mexp(a))
+#'   log(1 - exp(-a)),
+#'   log(-expm1(-a)),
+#'   log1p(-exp(-a)),
+#'   log1mexp(a)
+#' )
 #' names(f_expr) <- c("DEF", "expm1", "log1p", "F")
 #' str(fa <- do.call(cbind, as.list(f_expr)))
 #' head(fa) # expm1() works here
@@ -25,8 +26,9 @@ log1mexp <- function(a, cutoff = log(2)) {
     y <- a
     a <- a[ok <- !ina]
   }
-  if (any(a < 0))
+  if (any(a < 0)) {
     warning("'a' >= 0 needed")
+  }
   tst <- a <= cutoff
   r <- a
   r[tst] <- log(-expm1(-a[tst]))

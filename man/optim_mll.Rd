@@ -19,6 +19,6 @@ optim_mll(envdat, occ, parallel = FALSE, numstarts = 100)
 Optimization of the log-likelihood function
 }
 \examples{
-optim_df <- optim_mll(envdat_ex[, , 1:10], occExample[1:10], numstarts = 10)
+optim_df <- optim_mll(envdat_ex[, , 1:5], occExample[1:5], numstarts = 5)
 
 }

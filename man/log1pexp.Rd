@@ -26,6 +26,6 @@ Compute f(a) = log(1 +/- exp(-a)) Numerically Optimally.
 Original function by Martin Mächler (2012) in copula R pacakge
 }
 \examples{
-x <- seq(700, 720, by=2)
+x <- seq(700, 720, by = 2)
 cbind(x, log1p(exp(x)), log1pexp(x))
 }

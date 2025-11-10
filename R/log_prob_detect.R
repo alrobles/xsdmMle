@@ -32,11 +32,13 @@ log_prob_detect <- function(env_dat,
                             num_threads = RcppParallel::defaultNumThreads()) {
   RcppParallel::setThreadOptions(numThreads = num_threads)
 
-  h <- like_neg_ltsgr_cpp(env_dat = env_dat,
-                          mu = mu,
-                          sigl = sigl,
-                          sigr = sigr,
-                          o_mat = o_mat)
+  h <- like_neg_ltsgr_cpp(
+    env_dat = env_dat,
+    mu = mu,
+    sigl = sigl,
+    sigr = sigr,
+    o_mat = o_mat
+  )
 
   # Get probability of detection
   log_p <- log(pd) - log1pexp(ctil + h)

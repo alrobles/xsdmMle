@@ -124,7 +124,6 @@ profile_optim_par <- function(optim_vec, envdat, pa, stepsize = 0.001,
       # left size
       cat("Left side \n")
       while (new_optim_ll > thresh) {
-
         if (nsteps > 20) {
           break("stop: reach maximum steps")
         }

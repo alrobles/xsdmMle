@@ -19,9 +19,11 @@ get_start_parms <- function(ranges, numstarts = 100) {
   upper <- ranges[, 3]
   names(upper) <- rownames(ranges)
 
-  startparms_math <- pomp::sobol_design(lower = lower,
-                                        upper = upper,
-                                        nseq  = numstarts - 1)
+  startparms_math <- pomp::sobol_design(
+    lower = lower,
+    upper = upper,
+    nseq = numstarts - 1
+  )
   startparms_math <- rbind(startparms_math, center)
   tibble::as_tibble(startparms_math)
 }
