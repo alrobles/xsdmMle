@@ -65,7 +65,7 @@ loglik_biol <- function(env_dat, occ, mu, sigl, sigr, ctil, pd, o_mat,
   )
   
   #If sum_logp is TRUE, the user wants the location-specific log-likelihoods to be
-  #summed, otherwise they want they separately.
+  #summed, otherwise they want them separately as a vector.
   if (sum_logp) {
     res <- sum(occ * log_p + (1 - occ) * log1mexp(-log_p))
   } else {
