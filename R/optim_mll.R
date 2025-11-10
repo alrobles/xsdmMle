@@ -12,9 +12,9 @@
 optim_mll <- function(envdat, pa, parallel = FALSE, numstarts = 100) {
   envdat_ex_occ <- envdat[, , pa == 1]
 
-  paramTable <- startparms(envdat_ex_occ, numstarts = numstarts)
+  param_table <- startparms(envdat_ex_occ, numstarts = numstarts)
 
-  list_of_pars <- split(paramTable, seq(nrow(paramTable)))
+  list_of_pars <- split(param_table, seq(nrow(param_table)))
 
   list_of_pars <- Map(unlist, list_of_pars)
   # function generating of functions

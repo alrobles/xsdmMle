@@ -41,9 +41,6 @@ profile_optim_par <- function(optim_vec, envdat, pa, stepsize = 0.001,
       delta_step <- incr_down - incr_step
 
       thresh <- optim_ll - incr_down
-      #thresh_step <- optim_ll - incr_step
-      # adapt  step part
-
       optim_vec_output_df <- c(optim_vec, value = optim_ll)
       newstepsize <- stepsize
 
@@ -56,10 +53,6 @@ profile_optim_par <- function(optim_vec, envdat, pa, stepsize = 0.001,
           deltapos <- newstepsize * nsteps
         }
 
-        # cat("stepsize ", newstepsize, "\n")
-        # cat(new_optim_ll, " > ", (optim_ll - delta_step), "\n")
-        # print(new_optim_ll > (optim_ll - delta_step))
-        #
         new_optim_vec[parindex] <- new_optim_vec[parindex] + deltapos
 
         naVec <- rep(NA, 9)
@@ -100,8 +93,6 @@ profile_optim_par <- function(optim_vec, envdat, pa, stepsize = 0.001,
           break("stop: reach maximum steps")
         }
         deltapos <- nsteps * stepsize
-        # cat("deltapos ", deltapos, "\n")
-        # deltaneg <- -nsteps*stepsize
         new_optim_vec[parindex] <- new_optim_vec[parindex] + deltapos
 
         naVec <- rep(NA, 9)
@@ -140,16 +131,11 @@ profile_optim_par <- function(optim_vec, envdat, pa, stepsize = 0.001,
       # left size
       cat("Left side \n")
       while (new_optim_ll > thresh) {
-        # cat("step ", nsteps, "\n")
-        # cat(new_optim_ll, " > ", thresh, "\n")
-        # print(new_optim_ll > thresh)
 
         if (nsteps > 20) {
           break("stop: reach maximum steps")
         }
         deltapos <- nsteps * stepsize
-        # cat("deltapos ", deltapos, "\n")
-        # deltaneg <- -nsteps*stepsize
         new_optim_vec[parindex] <- new_optim_vec[parindex] - deltapos
 
         naVec <- rep(NA, 9)
@@ -205,6 +191,5 @@ profile_optim_par <- function(optim_vec, envdat, pa, stepsize = 0.001,
     }, .progress = TRUE)
   }
 
-  # purrr::reduce(res, rbind) |>  tibble::as_tibble()
   res
 }
