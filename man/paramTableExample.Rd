@@ -6,7 +6,7 @@
 \title{Environmental parameter table}
 \format{
 A data.frame with with dimensions 9 columns and 100 rows:
-The parameters are ctil, O1, mu1, mu2, sigLtil1, sigLtil2, sigRtil1, sigRtil2, pd
+The parameters are mu1, mu2, sigl1, sigl2, sigr1, sigr1, ctil, pd, and o_par1
 }
 \usage{
 paramTableExample

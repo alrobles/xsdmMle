@@ -17,10 +17,9 @@ make_cannonical <- function(bparms) {
   sigl <- bparms$sigl
   sigr <- bparms$sigr
 
-  # first multiply each column of O by 1 or -1 to make the top-most non-zero entry
-  # be positive
-  for (cc in 1:(dim(o_mat)[2]))
-  {
+  # first multiply each column of O by 1 or -1 to make the top-most
+  # non-zero entry be positive
+  for (cc in 1:(dim(o_mat)[2])) {
     h <- o_mat[, cc]
     firstnzind <- min(which(h != 0))
     if (h[firstnzind] < 0) {
@@ -32,8 +31,8 @@ make_cannonical <- function(bparms) {
     }
   }
 
-  # now reorder the columns of O using dictionary order, and bring the entries of
-  # sigl and sigr "along for the ride"
+  # now reorder the columns of O using dictionary order, and bring the entries
+  # of sigl and sigr "along for the ride"
   inds <- do.call(order, as.data.frame(t(o_mat)))
   o_mat <- o_mat[, inds]
   sigl <- sigl[inds]
@@ -43,5 +42,5 @@ make_cannonical <- function(bparms) {
   bparms$o_mat <- o_mat
   bparms$sigl <- sigl
   bparms$sigr <- sigr
-  return(bparms)
+  bparms
 }

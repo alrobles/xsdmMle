@@ -14,7 +14,7 @@ optim_mll <- function(envdat, pa, parallel = FALSE, numstarts = 100) {
 
   param_table <- startparms(envdat_ex_occ, numstarts = numstarts)
 
-  list_of_pars <- split(param_table, seq(nrow(param_table)))
+  list_of_pars <- split(param_table, seq_len(nrow(param_table)))
 
   list_of_pars <- Map(unlist, list_of_pars)
   # function generating of functions
@@ -47,7 +47,7 @@ optim_mll <- function(envdat, pa, parallel = FALSE, numstarts = 100) {
         )
       })
 
-      return(output)
+      output
     }
   }
 
@@ -69,6 +69,6 @@ optim_mll <- function(envdat, pa, parallel = FALSE, numstarts = 100) {
     as.data.frame() |>
     tibble::as_tibble()
   res <- res[order(res$value, decreasing = TRUE), ]
-  res$index <- 1:nrow(res)
-  return(res)
+  res$index <- seq_len(nrow(res))
+  res
 }

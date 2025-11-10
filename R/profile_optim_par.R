@@ -55,8 +55,8 @@ profile_optim_par <- function(optim_vec, envdat, pa, stepsize = 0.001,
 
         new_optim_vec[parindex] <- new_optim_vec[parindex] + deltapos
 
-        naVec <- rep(NA, 9)
-        naVec[parindex] <- new_optim_vec[parindex]
+        na_vec <- rep(NA, 9)
+        na_vec[parindex] <- new_optim_vec[parindex]
 
         suppressWarnings({
           new_optim <- optimx::optimx(
@@ -64,7 +64,7 @@ profile_optim_par <- function(optim_vec, envdat, pa, stepsize = 0.001,
             fn = loglik_orthog_nd_unconstr,
             env = envdat,
             pa = pa,
-            opt = naVec,
+            opt = na_vec,
             hessian = FALSE,
             negative = FALSE,
             control = list(trace = FALSE, maximize = TRUE, kkt = FALSE),
@@ -72,7 +72,6 @@ profile_optim_par <- function(optim_vec, envdat, pa, stepsize = 0.001,
           )
         })
 
-        # cat(paste0("new optim: ", new_optim$value, " "))
         new_optim_ll <- new_optim$value
       }
       # reset
@@ -85,19 +84,14 @@ profile_optim_par <- function(optim_vec, envdat, pa, stepsize = 0.001,
       # right size
       cat("start right size \n")
       while (new_optim_ll > thresh) {
-        # cat("step ", nsteps, "\n")
-        # cat(new_optim_ll, " > ", thresh, "\n")
-        # print(new_optim_ll > thresh)
-
         if (nsteps > 20) {
           break("stop: reach maximum steps")
         }
         deltapos <- nsteps * stepsize
         new_optim_vec[parindex] <- new_optim_vec[parindex] + deltapos
 
-        naVec <- rep(NA, 9)
-        naVec[parindex] <- new_optim_vec[parindex]
-
+        na_vec <- rep(NA, 9)
+        na_vec[parindex] <- new_optim_vec[parindex]
 
         suppressMessages({
           new_optim <- optimx::optimx(
@@ -105,7 +99,7 @@ profile_optim_par <- function(optim_vec, envdat, pa, stepsize = 0.001,
             fn = loglik_orthog_nd_unconstr,
             envdat = envdat,
             pa = pa,
-            opt = naVec,
+            opt = na_vec,
             hessian = FALSE,
             negative = FALSE,
             control = list(trace = FALSE, maximize = TRUE, kkt = FALSE),
@@ -113,13 +107,12 @@ profile_optim_par <- function(optim_vec, envdat, pa, stepsize = 0.001,
           )
         })
 
-        # delta_ll <- optim_ll - new_optim$value
         new_optim_ll <- new_optim$value
         # threshold
         nsteps <- nsteps + 1
-        # print(new_optim_ll)
         new_optim[parindex] <- new_optim_vec[parindex]
-        optim_vec_output_df <- rbind(optim_vec_output_df, c(unlist(new_optim[1:9]), value = new_optim_ll))
+        optim_vec_output_df <- optim_vec_output_df |>
+          rbind(c(unlist(new_optim[1:9]), value = new_optim_ll))
       }
 
       # reset
@@ -138,8 +131,8 @@ profile_optim_par <- function(optim_vec, envdat, pa, stepsize = 0.001,
         deltapos <- nsteps * stepsize
         new_optim_vec[parindex] <- new_optim_vec[parindex] - deltapos
 
-        naVec <- rep(NA, 9)
-        naVec[parindex] <- new_optim_vec[parindex]
+        na_vec <- rep(NA, 9)
+        na_vec[parindex] <- new_optim_vec[parindex]
 
 
         suppressMessages({
@@ -148,7 +141,7 @@ profile_optim_par <- function(optim_vec, envdat, pa, stepsize = 0.001,
             fn = loglik_orthog_nd_unconstr,
             envdat = envdat,
             pa = pa,
-            opt = naVec,
+            opt = na_vec,
             hessian = FALSE,
             negative = FALSE,
             control = list(trace = FALSE, maximize = TRUE, kkt = FALSE),
@@ -156,7 +149,6 @@ profile_optim_par <- function(optim_vec, envdat, pa, stepsize = 0.001,
           )
         })
 
-        # delta_ll <- optim_ll - new_optim$value
         new_optim_ll <- new_optim$value
         # threshold
         nsteps <- nsteps + 1
@@ -168,28 +160,21 @@ profile_optim_par <- function(optim_vec, envdat, pa, stepsize = 0.001,
         )
       }
 
-      rownames(optim_vec_output_df) <- 1:nrow(optim_vec_output_df)
-
-      return(optim_vec_output_df)
+      rownames(optim_vec_output_df) <- seq_len(nrow(optim_vec_output_df))
+      optim_vec_output_df
     }
   }
   f_test <- f_optim_functor(envdat, pa)
-
-
   if (parallel) {
     with(future::plan(future.callr::callr), local = TRUE)
-
     future::plan(strategy = "multisession", workers = 16)
-    res <- furrr::future_map(1:length(optim_vec), \(x){
+    res <- furrr::future_map(seq_along(optim_vec), \(x) {
       f_test(optim_vec, parindex = x)
-    },
-    .options = furrr::furrr_options(seed = NULL), .progress = TRUE
-    )
+    }, .options = furrr::furrr_options(seed = NULL), .progress = TRUE)
   } else {
-    res <- purrr::map(seq_along(optim_vec), \(x){
+    res <- purrr::map(seq_along(optim_vec), \(x) {
       f_test(optim_vec, parindex = x)
     }, .progress = TRUE)
   }
-
   res
 }

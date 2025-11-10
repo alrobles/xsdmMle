@@ -40,8 +40,8 @@ loglik_orthog_nd(
 \item{sum_logp}{Logical (default TRUE) returns the sum of log of probability
 detection}
 
-\item{return_prob}{Logical (default FALSE) returns the probability of detections
-instead the log of proabilities}
+\item{return_prob}{Logical (default FALSE) returns the probability of
+detections instead the log of probabilities}
 }
 \value{
 The value of the logarithm of the likelihood function in the
@@ -54,7 +54,7 @@ Logarithm of the likelihood oof detection of a species
 \examples{
 o_mat <- paramListExample$O
 mu <- paramListExample$mu
-sigl <- paramListExample$sigLtil  
+sigl <- paramListExample$sigLtil
 sigr <- paramListExample$sigRtil
 pd <- paramListExample$pd
 ctil <- paramListExample$ctil
@@ -62,11 +62,10 @@ envdat <- envdat_ex
 occ <- occExample
 
 ll <- loglik_orthog_nd(envdat_ex, occ,
-  mu = mu, 
+  mu = mu,
   sigl = sigl,
   sigr = sigl,
   ctil = ctil, pd = pd, o_mat = o_mat
 )
-
-
+ll
 }

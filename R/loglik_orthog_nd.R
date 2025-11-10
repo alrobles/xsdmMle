@@ -10,8 +10,8 @@
 #' @param o_mat An orthogonal matrix
 #' @param sum_logp Logical (default TRUE) returns the sum of log of probability
 #' detection
-#' @param return_prob Logical (default FALSE) returns the probability of detections
-#' instead the log of proabilities
+#' @param return_prob Logical (default FALSE) returns the probability of
+#' detections instead the log of probabilities
 #' @param num_threads The number of threads for parallel computing
 #'
 #' @returns The value of the logarithm of the likelihood function in the
@@ -22,7 +22,7 @@
 #' @examples
 #' o_mat <- paramListExample$O
 #' mu <- paramListExample$mu
-#' sigl <- paramListExample$sigLtil  
+#' sigl <- paramListExample$sigLtil
 #' sigr <- paramListExample$sigRtil
 #' pd <- paramListExample$pd
 #' ctil <- paramListExample$ctil
@@ -30,13 +30,12 @@
 #' occ <- occExample
 #'
 #' ll <- loglik_orthog_nd(envdat_ex, occ,
-#'   mu = mu, 
+#'   mu = mu,
 #'   sigl = sigl,
 #'   sigr = sigl,
 #'   ctil = ctil, pd = pd, o_mat = o_mat
 #' )
-#' 
-#'
+#' ll
 loglik_orthog_nd <- function(envdat, occ, mu, sigl, sigr, ctil, pd, o_mat,
                              num_threads = RcppParallel::defaultNumThreads(),
                              sum_logp = TRUE,
@@ -54,16 +53,6 @@ loglik_orthog_nd <- function(envdat, occ, mu, sigl, sigr, ctil, pd, o_mat,
     o_mat = o_mat,
     return_prob = FALSE
   )
-
-  # now get the log likelihood and return
-  # res = sum(pa*logpdetect+(1-pa)*log(1-exp(logpdetect)))
-  # this is what you want but you probably want to use
-  # a log1mexp type function for numeric stability
-
-
-  # copula::log1mexp(a) for positive a is actually log(1-exp(-a))
-  # for some reason
-
   if (sum_logp) {
     res <- sum(occ * logpdetect + (1 - occ) * copula::log1mexp(-logpdetect))
   } else {

@@ -6,41 +6,41 @@
 \usage{
 loglik_orthog_nd_unconstr(
   param_vector,
-  envdat,
-  pa,
+  env_dat,
+  occ,
   opt = NULL,
   negative = TRUE,
   num_threads = RcppParallel::defaultNumThreads()
 )
 }
 \arguments{
-\item{param_vector}{A vector with parameters to test in a log-likelihood function
-of the species distribution model.}
+\item{param_vector}{A vector with parameters to test in a log-likelihood
+function of the species distribution model.}
 
-\item{envdat}{An array with environmental data, includes the time series in each
-location for each environmental variable}
+\item{env_dat}{An array with environmental data, includes the time series
+in each location for each environmental variable}
 
-\item{pa}{A presence absence vector}
+\item{occ}{A presence absence vector}
 
 \item{opt}{An optional vector to mute a specific parameter to evaluate. It is
 further used to profile the optimization}
 
-\item{negative}{Logical. If true returns the negative of the log likelihood function.
-Flag set when optimize}
+\item{negative}{Logical. If true returns the negative of the log-likelihood
+function. Flag should be set when optimize.}
 
 \item{num_threads}{The number of threads to run the main function}
 }
 \value{
-A value with the log of the likelihood for a given set of parameters, environmental
-variables and presence-absences ocurrencies.
+A value with the log of the likelihood for a given set of
+parameters, environmental variables and presence-absences ocurrences.
 }
 \description{
 log likelihood orthogonal
 }
 \examples{
-envdat <- envdat_ex
-pa <- occExample
+env_dat <- env_dat_ex
+occ <- occExample
 params <- paramTableExample[5, ]
 param_vector <- params
-loglik_orthog_nd_unconstr(params, envdat, pa)
+loglik_orthog_nd_unconstr(params, env_dat, occ)
 }
