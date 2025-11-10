@@ -8,7 +8,7 @@
 #' @export
 #'
 #' @examples
-#' math_to_bio(paramTableExample[1, ])
+#' math_to_bio(param_table_example[1, ])
 math_to_bio <- function(param_vector) {
   o_par <- param_vector[grep("o_par", names(param_vector))]
   param_list <- list(

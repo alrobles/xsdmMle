@@ -4,12 +4,12 @@
 \alias{optim_mll}
 \title{Optimization of the log-likelihood function}
 \usage{
-optim_mll(envdat, pa, parallel = FALSE, numstarts = 100)
+optim_mll(envdat, occ, parallel = FALSE, numstarts = 100)
 }
 \arguments{
 \item{envdat}{Environmental time series array}
 
-\item{pa}{Presence absence vector}
+\item{occ}{Presence absence vector}
 
 \item{parallel}{Parallelization strategy}
 

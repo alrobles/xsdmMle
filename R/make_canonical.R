@@ -8,7 +8,7 @@
 #'
 #' @examples
 #'
-#' paramTableExample[1, ] |>
+#' param_table_example[1, ] |>
 #'   math_to_bio() |>
 #'   make_cannonical()
 make_cannonical <- function(bparms) {

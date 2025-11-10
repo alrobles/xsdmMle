@@ -1,6 +1,6 @@
-#' Title
+#' Probability of Detection
 #'
-#' @param envdat The environmental data array
+#' @param env_dat The environmental data array
 #' @param mu A vector of mu
 #' @param sigl A vector of sigl
 #' @param sigr A vector of sigr
@@ -20,28 +20,26 @@
 #' ctil <- -2
 #' pd <- 0.9
 #' o_mat <- matrix(c(-0.4443546, 0.8958510, -0.8958510, -0.4443546), ncol = 2)
-#' M <- logprobdetect(envdat_ex, mu, sigl, sigl, ctil, pd, o_mat)
-logprobdetect <- function(envdat,
-                          mu,
-                          sigl,
-                          sigr,
-                          ctil,
-                          pd,
-                          o_mat,
-                          return_prob = FALSE,
-                          num_threads = RcppParallel::defaultNumThreads()) {
+#' M <- log_prob_detect(envdat_ex, mu, sigl, sigl, ctil, pd, o_mat)
+log_prob_detect <- function(env_dat,
+                            mu,
+                            sigl,
+                            sigr,
+                            ctil,
+                            pd,
+                            o_mat,
+                            return_prob = FALSE,
+                            num_threads = RcppParallel::defaultNumThreads()) {
   RcppParallel::setThreadOptions(numThreads = num_threads)
 
-  h <- like_neg_ltsgr_cpp(
-    envdat = envdat,
-    o_mat = o_mat,
-    mu = mu,
-    sigl = sigl,
-    sigr = sigr,
-  )
+  h <- like_neg_ltsgr_cpp(env_dat = env_dat,
+                          mu = mu,
+                          sigl = sigl,
+                          sigr = sigr,
+                          o_mat = o_mat)
 
   # Get probability of detection
-  log_p <- log(pd) - copula::log1pexp(ctil + h)
+  log_p <- log(pd) - log1pexp(ctil + h)
   RcppParallel::setThreadOptions(numThreads = RcppParallel::defaultNumThreads())
 
   ifelse(return_prob, exp(log_p), log_p)

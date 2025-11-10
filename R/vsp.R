@@ -9,7 +9,7 @@ vsp <- function(env_data, param_list) {
 
   f <- function(env) {
     function(mu, sigl, sigr, c, pd, o_mat) {
-      logprobdetect(env, mu, sigl, sigr, c, pd, o_mat)
+      log_prob_detect(env, mu, sigl, sigr, c, pd, o_mat)
     }
   }
   if (is.null(param_list)) {

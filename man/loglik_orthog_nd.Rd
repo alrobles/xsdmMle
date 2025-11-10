@@ -5,7 +5,7 @@
 \title{Logarithm of the likelihood oof detection of a species}
 \usage{
 loglik_orthog_nd(
-  envdat,
+  env_dat,
   occ,
   mu,
   sigl,
@@ -19,15 +19,15 @@ loglik_orthog_nd(
 )
 }
 \arguments{
-\item{envdat}{The environmental data array}
+\item{env_dat}{The environmental data array}
 
 \item{occ}{Presence absence binary vector}
 
-\item{mu}{A vector of mu}
+\item{mu}{A vector of mu parameters}
 
-\item{sigl}{A vector of sigl}
+\item{sigl}{A vector of sigl parameters}
 
-\item{sigr}{A vector of sigr}
+\item{sigr}{A vector of sigr parameters}
 
 \item{ctil}{C tilde parameter}
 
@@ -52,20 +52,24 @@ absence locations
 Logarithm of the likelihood oof detection of a species
 }
 \examples{
-o_mat <- paramListExample$O
-mu <- paramListExample$mu
-sigl <- paramListExample$sigLtil
-sigr <- paramListExample$sigRtil
-pd <- paramListExample$pd
-ctil <- paramListExample$ctil
-envdat <- envdat_ex
+o_mat <- param_list_example$o_mat
+mu <- param_list_example$mu
+sigl <- param_list_example$sigl
+sigr <- param_list_example$sigr
+pd <- param_list_example$pd
+ctil <- param_list_example$ctil
+env_dat <- envdat_ex
 occ <- occExample
 
-ll <- loglik_orthog_nd(envdat_ex, occ,
+ll <- loglik_orthog_nd(
+  env_dat,
+  occ,
   mu = mu,
-  sigl = sigl,
+  sigl = sigr,
   sigr = sigl,
-  ctil = ctil, pd = pd, o_mat = o_mat
+  ctil = ctil,
+  pd = pd,
+  o_mat = o_mat
 )
 ll
 }

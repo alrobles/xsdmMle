@@ -5,4 +5,4 @@
 #' The parameters are mu1, mu2, sigl1, sigl2, sigr1, sigr1, ctil, pd, and o_par1
 #' @details This set of parameters correspond to the case of a two environmental
 #' time series fit
-"paramTableExample"
+"param_table_example"

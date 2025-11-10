@@ -20,5 +20,5 @@ Convert a unconstrained vector of parameters in a list of parameters
 to fit the log likelihood function.
 }
 \examples{
-math_to_bio(paramTableExample[1, ])
+math_to_bio(param_table_example[1, ])
 }

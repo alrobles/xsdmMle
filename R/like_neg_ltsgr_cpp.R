@@ -1,6 +1,7 @@
-#' uasym
+#' The negative of the (like) long term stochastich growth function
+#' implemented in c++.
 #'
-#' @param envdat The environmental data array
+#' @param env_dat The environmental data array
 #' @param mu A vector of mu
 #' @param sigl A vector of sigl
 #' @param sigr A vector of sigr
@@ -10,12 +11,16 @@
 #' @export
 #'
 #' @examples
-#' O <- matrix(c(-0.4443546, 0.8958510, -0.8958510, -0.4443546), ncol = 2)
+#' o_mat <- matrix(c(-0.4443546, 0.8958510, -0.8958510, -0.4443546), ncol = 2)
 #' mu <- c(11.433373, 5.046939)
 #' sigl <- c(1.036834, 1.556083)
 #' sigr <- c(1.538972, 1.458738)
-#' M <- like_neg_ltsgr_cpp(envdat_ex, mu, sigl, sigl, O)
-like_neg_ltsgr_cpp <- function(envdat,
+#' M <- like_neg_ltsgr_cpp(env_dat = envdat_ex,
+#' mu = mu,
+#' sigl = sigl,
+#' sigr = sigl,
+#' o_mat = o_mat)
+like_neg_ltsgr_cpp <- function(env_dat,
                                mu,
                                sigl,
                                sigr,
@@ -25,12 +30,12 @@ like_neg_ltsgr_cpp <- function(envdat,
   RcppParallel::setThreadOptions(numThreads = n_threads)
 
   # get various dimensions for convenience
-  n <- dim(envdat)[3] # number of locations with detections or nondetections
-  ts_length <- dim(envdat)[2] # steps in time series
+  n <- dim(env_dat)[3] # number of locations with detections or nondetections
+  ts_length <- dim(env_dat)[2] # steps in time series
   p <- length(mu) # dimensions/number of env vars
 
   # subtract mu and apply O to get to u
-  envdat_mat <- matrix(envdat, nrow = p, ncol = ts_length * n)
+  env_dat_mat <- matrix(env_dat, nrow = p, ncol = ts_length * n)
 
   # apply the asymmetries
   if (p == 1) {
@@ -43,7 +48,7 @@ like_neg_ltsgr_cpp <- function(envdat,
   drl_inv <- dr_inv - dl_inv
 
   res <- like_ltsg(
-    env_m = envdat_mat,
+    env_m = env_dat_mat,
     mu = mu,
     dl_mat = dl_inv,
     drl_mat = drl_inv,

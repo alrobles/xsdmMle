@@ -2,10 +2,11 @@
 % Please edit documentation in R/like_neg_ltsgr_cpp.R
 \name{like_neg_ltsgr_cpp}
 \alias{like_neg_ltsgr_cpp}
-\title{uasym}
+\title{The negative of the (like) long term stochastich growth function
+implemented in c++.}
 \usage{
 like_neg_ltsgr_cpp(
-  envdat,
+  env_dat,
   mu,
   sigl,
   sigr,
@@ -14,7 +15,7 @@ like_neg_ltsgr_cpp(
 )
 }
 \arguments{
-\item{envdat}{The environmental data array}
+\item{env_dat}{The environmental data array}
 
 \item{mu}{A vector of mu}
 
@@ -30,12 +31,17 @@ like_neg_ltsgr_cpp(
 A numeric value of the log of the likelihood function
 }
 \description{
-uasym
+The negative of the (like) long term stochastich growth function
+implemented in c++.
 }
 \examples{
-O <- matrix(c(-0.4443546, 0.8958510, -0.8958510, -0.4443546), ncol = 2)
+o_mat <- matrix(c(-0.4443546, 0.8958510, -0.8958510, -0.4443546), ncol = 2)
 mu <- c(11.433373, 5.046939)
 sigl <- c(1.036834, 1.556083)
 sigr <- c(1.538972, 1.458738)
-M <- like_neg_ltsgr_cpp(envdat_ex, mu, sigl, sigl, O)
+M <- like_neg_ltsgr_cpp(env_dat = envdat_ex,
+mu = mu,
+sigl = sigl,
+sigr = sigl,
+o_mat = o_mat)
 }
