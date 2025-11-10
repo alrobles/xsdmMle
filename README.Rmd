@@ -51,7 +51,9 @@ envData <- list(bio1 = bio1_ts, bio12 = bio12_ts)
 # data frame (sp_virtual_example)
 envdat <- env_data_array(envData, occ = sp_virtual_example)
 ```
+
 Following this we fit using the function optim_mll:
+
 ```{r example-2}
 # 01 We store the presence absence vector
 occ <- sp_virtual_example$presence
@@ -62,6 +64,7 @@ occ <- sp_virtual_example$presence
 optim_df <- optim_mll(envdat, occ, numstarts = 50, parallel = TRUE)
 ```
 ```
-The we got a data frame with the maximum likelihood estimation for each set of 
+
+Then we got a data frame with the maximum likelihood estimation for each set of 
 initial starting points in the optimization. We have this on the biological scale of
 parameters (Is the unconstrained space of parameters where the optimizer found the maximum of the function).

@@ -53,7 +53,9 @@ occ <- sp_virtual_example$presence
 optim_df <- optim_mll(envdat, occ, numstarts = 50, parallel = TRUE)
 ```
 
-\`\`\` The we got a data frame with the maximum likelihood estimation
-for each set of initial starting points in the optimization. We have
-this on the biological scale of parameters (Is the unconstrained space
-of parameters where the optimizer found the maximum of the function).
+\`\`\`
+
+Then we got a data frame with the maximum likelihood estimation for each
+set of initial starting points in the optimization. We have this on the
+biological scale of parameters (Is the unconstrained space of parameters
+where the optimizer found the maximum of the function).
