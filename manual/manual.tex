@@ -1,0 +1,500 @@
+\documentclass{article}
+\usepackage{xcolor}
+\usepackage{natbib}
+\usepackage{authblk}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{pdflscape}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{geometry}
+\usepackage{longtable}
+
+\newcommand*\mean[1]{\overline{#1}}
+\newcommand{\var}{\text{var}}
+\newcommand{\Var}[1]{\text{Var}(#1)}
+\newcommand{\cov}{\text{cov}}
+\newcommand{\cor}{\text{cor}}
+\newcommand{\Rp}{\text{Re}}
+\newcommand{\E}{\text{E}}
+\newcommand{\Mat}[1]{\text{\textbf{#1}}}
+\newcommand{\ltsgr}{\text{ltsgr}}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\baselinestretch}{1.5}
+\newcommand{\expit}{\text{expit}}
+\newcommand{\logit}{\text{logit}}
+
+\title{Manual for the R package xsdmMle}
+
+\author[a]{\'{A}ngel Luis Robles Fern\'{a}dez}
+\author[b]{Emilio Berti}
+\author[a]{Daniel C. Reuman}
+
+\affil[a]{Department of Ecology and Evolutionary Biology and Center for Ecological Research, University of Kansas, Higuchi Hall, Lawrence, KS, 66047, USA\vspace{0.5em}}
+\affil[b]{Institute of Biodiversity, Friedrich-Schiller University Jena, F\:{u}rstengraben 1, Jena, 07743,
+Germany}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+Note: right now I just took all the math I wrote and dumped it in here. There's a big
+difference between the math and the manual, but I have not really though nearly
+enough about how the manual will be organized to make this more like a manual that
+will be useful for people starting to use the package for the first time. So right
+now it bears little resemblance to what it will eventually look like. ALL the math 
+will be included, though, in edited form, and most in the appendices or later 
+``advanced'' chapters so I dumped it all in here for now. 
+
+\section{The model}
+
+\subsection{Overview of model structure}
+
+We assume a population, $p_t$, of a species in a location follows the model 
+$p_{t+1} = \lambda_t p_t$, where $\lambda_t$ is a net population growth rate.
+Given an environmental time series $\vec{e}_t$ for the location, the model estimates 
+the habitat suitability of the location for the species in three steps. First,
+a ``growth-environment function" model component postulates that 
+$\lambda_t$ is a function of $\vec{e}_t$ and a first set 
+of model parameters, $\theta_1$. 
+Second, the long-term stochastic growth rate 
+(ltsgr) for the location is computed as 
+\begin{equation}
+\text{ltsgr} = \mean{\log(\lambda_t)},
+\end{equation}
+where the overbar represents the average through time. All 
+logarithms in this paper are natural logarithms. Third, the habitat suitability of
+the location is assumed to be a sigmoid function of the ltsgr, with the specific
+shape of the sigmoid controlled by a second set of model parameters, $\theta_2$.
+This component of the model is called the ``detection link''.
+For model confrontation with species occurrence data and (pseudo-)absences, 
+habitat suitability is assumed to represent a probability of occurrence.
+
+\subsection{The growth-environment function}\label{sect:defns}
+
+Let $n$ be a positive integer representing the number of environmental variables which
+will influence population growth, i.e., $n$ is the dimension of $\vec{e}_t$. Let $\vec{\mu}=(\mu_1,\ldots,\mu_n)$ be an $n$-vector of unconstrained
+real values representing the optimal values for growth of each environmental variable. 
+Let $\vec{\sigma}_L=(\sigma_{L,1},\ldots,\sigma_{L,n})$ and $\vec{\sigma}_R=(\sigma_{R,1},\ldots,\sigma_{R,n})$ be $n$-vectors of strictly positive real
+values representing widths of the growth-environment function to the left and to 
+the right, respectively, with respect to the corresponding environmental variable.
+Let $O$ be an $n \times n$ orthogonal matrix (i.e., $OO^\tau = I$, where the $\tau$ represents matrix transpose). Let $\lambda_{\text{max}}$ represent 
+population growth under optimal conditions, i.e., the maximum possible annual net
+growth rate. The growth-environment function is defined as
+\begin{equation}
+\lambda_t = \lambda_{\text{max}} \prod_{i=1}^n \exp\left( -\frac{1}{2} \left( \frac{u_{t,i}}{\sigma_i(u_{t,i})}  \right)^2 \right),
+\label{eq:gefunc}
+\end{equation}
+where $\vec{u}_t = O^{-1}(\vec{e}_t-\vec{\mu})$ and $\sigma_i(u_{t,i}) = \sigma_{L,i}$ if 
+$u_{t,i} \leq 0$ and $\sigma_i(u_{t,i}) = \sigma_{R,i}$ if $u_{t,i} > 0$. 
+Fig. X (to be added) shows examples of functions that can be
+obtained from (\ref{eq:gefunc}) in one and two dimensions. 
+%Add a figure showing examples in 1d and 2d and cite the figure here
+
+We now elaborate the reasoning behind (\ref{eq:gefunc}). In the univariate case,
+(\ref{eq:gefunc}) reduces to
+\begin{equation}
+\lambda_t= \lambda_{\text{max}}\exp \left( -\frac{1}{2} \left( \frac{e_t - \mu}{\sigma(e_t-\mu)} \right) ^2 \right),
+\end{equation}
+where $\sigma(e_t-\mu) = \sigma_L$ if $e_t \leq \mu$, and $\sigma(e_t-\mu) = \sigma_R$ if $e_t > \mu$. This function is proportional to an asymmetric generalization of the
+probability density function (pdf) of a normal distribution.
+This form is convenient because annual net growth rate should decline monotonically to zero 
+for extreme values of $e_t$, though it may do so asymmetrically. 
+For similar reasons, the multivariate growth-environment function is an asymmetric 
+generalization of a functional form used in the pdf of the multivariate normal distribution,
+\begin{equation}
+\exp\left( -\frac{1}{2}(\vec{e}_t-\vec{\mu})^\tau \Sigma^{-1} (\vec{e}_t-\vec{\mu}) \right),
+\label{eq:multivarnorm}
+\end{equation}
+where $\Sigma$ is a positive-definite covariance matrix. 
+To define an asymmetric generalization of eq. (\ref{eq:multivarnorm}), we first 
+note, by the spectral theorem, 
+that we can write $\Sigma= O D O^{-1}$ for $O$ an orthogonal matrix
+and $D$ a diagonal matrix with positive diagonal entries. The columns of $O$ are
+the eigenvectors of $\Sigma$ and the diagonal entries of $D$ are the corresponding 
+eigenvalues. 
+Then,
+\begin{align}
+\exp\left(-\frac{1}{2}(\vec{e}_t - \vec{\mu})^\tau \Sigma^{-1} (\vec{e}_t - \vec{\mu})\right) &= 
+\exp\left(-\frac{1}{2}(\vec{e}_t - \vec{\mu})^\tau 
+O D^{-1} O^{-1}  (\vec{e}_t - \vec{\mu})\right) \\ 
+&= \exp\left(-\frac{1}{2}[O^{-1} (\vec{e}_t - \vec{\mu})]^\tau D^{-1} [O^{-1} (\vec{e}_t - \vec{\mu})]\right) \\
+&= \exp\left(-\frac{1}{2}\vec{u}_t^\tau D^{-1} \vec{u}_t\right),
+\end{align}
+where $\vec{u}_t = O^{-1} (\vec{e}_t - \vec{\mu})$. Letting $\sigma_i$ be the 
+square root of the $i$th diagonal entry of $D$, this is 
+\begin{equation}
+\exp\left(-\frac{1}{2}\sum_{i=1}^n \left( \frac{u_{t,i}}{\sigma_i} \right)^2\right)=
+\prod_{i=1}^n \exp\left(-\frac{1}{2} \left( \frac{u_{t,i}}{\sigma_i} \right)^2\right).
+\end{equation}
+Introducing asymmetry, this generalizes straightforwardly to 
+\begin{equation}
+\prod_{i=1}^n \exp\left(-\frac{1}{2} \left( \frac{u_{t,i}}{\sigma_i(u_{t,i})} \right)^2\right).
+\end{equation}
+where $\sigma_i(u_{t,i}) = \sigma_{L,i}$ if 
+$u_{t,i} \leq 0$ and $\sigma_i(u_{t,i}) = \sigma_{R,i}$ if $u_{t,i} > 0$.
+Multiplying by $\lambda_{\text{max}}$ then gives (\ref{eq:gefunc}).
+
+\subsection{Getting a sense for what growth-environment functions look like}
+
+I currently have a figure cited above which does not exist yet. Maybe it is enough to 
+have such a figure but maybe you actually need a whole section. Adding it here to
+be filled in later.
+
+\subsection{The detection link}
+
+The detection link is 
+\begin{equation}
+\frac{p_d}{1+exp(-b(\text{ltsgr}-c))},
+\end{equation}
+where $0<p_d \leq 1$, $b>0$, and $c$ is an unconstrained real number.
+
+\section{The likelihood function}\label{sect:like}
+
+The long-term stochastic growth rate (ltsgr) is 
+\begin{align}
+\text{ltsgr} &= \mean{\log(\lambda_t)} \\
+&= \log(\lambda_{\text{max}}) - \frac{1}{2}\sum_{i=1}^n \mean{\left( \frac{u_{t,i}}{\sigma_i(u_{t,i})} \right)^2}. 
+\end{align}
+Plugging this into the detection link gives a probability of detection for 
+the location of 
+\begin{align}
+P(X=1) &=
+\frac{p_d}{1+\exp\left( -b(\text{ltsgr}-c) \right)} \\
+&= \frac{p_d}{1+\exp\left(\frac{b}{2}\sum_{i=1}^n \mean{\left( \frac{u_{t,i}}{\sigma_i(u_{t,i})} \right)^2}  +b(c-\log(\lambda_{\text{max}}))\right)} \\
+&= \frac{p_d}{1+\exp\left(\frac{1}{2}\sum_{i=1}^n \mean{\left( \frac{u_{t,i}}{\sigma_i(u_{t,i})/\sqrt{b}} \right)^2}  +b(c-\log(\lambda_{\text{max}}))\right)} \label{eq:structnonident}\\
+&= \frac{p_d}{1+\exp\left(\frac{1}{2}\sum_{i=1}^n \mean{\left( \frac{u_{t,i}}{\tilde{\sigma}_i(u_{t,i})} \right)^2}  +\tilde{c}\right)},\label{eq:probdetect}
+\end{align}
+where $\tilde{c} = b(c-\log(\lambda_{\text{max}}))$ and 
+$\tilde{\sigma}_i(u_{t,i}) = \tilde{\sigma}_{L,i} \equiv \sigma_{L,i}/\sqrt{b}$
+for $u_{t,i} \leq 0$ and $\tilde{\sigma}_i(u_{t,i}) = \tilde{\sigma}_{R,i} \equiv \sigma_{R,i}/\sqrt{b}$
+for $u_{t,i} > 0$. This parameter reduction is to eliminate the structural non-identifiability
+in the model, visible in (\ref{eq:structnonident}). As a result of the parameter reduction, 
+the probability of detection (and, subsequently, the 
+likelihood, defined below) is a function of $\vec{e}_t$, $\vec{\mu}$, $O$, $\tilde{\vec{\sigma}}_L$,
+$\tilde{\vec{\sigma}}_R$, $\tilde{c}$, and $p_d$. If $P_i$ is the probability of 
+detection, just defined, for location $i$, then the likelihood is 
+$\prod_i P_i \prod_j (1-P_j)$, where the first product is over all detection locations
+and the second is over all locations of absence or pseudo-absence.
+
+\section{Maximizing the likelihood}
+
+\subsection{The ``math scale'' and the ``biological scale''}
+
+Some of the parameters the likelihood function depends on
+($\vec{\mu}$, $O$, $\tilde{\vec{\sigma}}_L$,
+$\tilde{\vec{\sigma}}_R$, $\tilde{c}$, and $p_d$; see section \ref{sect:like})
+are constrained. In order to be able to optimize the likelihood function working on
+an unconstrained space, we here define such a space, and we 
+describe transformations that convert parameters between the unconstrained and
+constrained spaces. 
+
+Parameters in the unconstrained space are henceforth called
+``math-scale'' parameters, and constrained parameters defined in 
+section \ref{sect:like} are called ``biological-scale'' parameters. The transformations
+between the two spaces act separately on each parameter. When a 
+distinction is needed, we denote biological-scale parameters with a superscript
+$(b)$, and math-scale parameters with a superscript $(m)$, so the biological-scale
+parameters are denoted $\vec{\mu}^{(b)}$, $O^{(b)}$, $\tilde{\vec{\sigma}}_L^{(b)}$,
+$\tilde{\vec{\sigma}}_R^{(b)}$, $\tilde{c}^{(b)}$, and $p_d^{(b)}$; and the math-scale
+parameters are denoted $\vec{\mu}^{(m)}$, $O^{(m)}$, $\tilde{\vec{\sigma}}_L^{(m)}$,
+$\tilde{\vec{\sigma}}_R^{(m)}$, $\tilde{c}^{(m)}$, and $p_d^{(m)}$.
+The transformations for all the parameters except $O$ are
+\begin{align}
+\vec{\mu}^{(b)} &= \vec{\mu}^{(m)} \label{eq:mutrans}\\
+\tilde{\vec{\sigma}}_L^{(b)} &= \exp(\tilde{\vec{\sigma}}_L^{(m)}) \label{eq:sigLtrans}\\
+\tilde{\vec{\sigma}}_R^{(b)} &= \exp(\tilde{\vec{\sigma}}_R^{(m)}) \label{eq:sigRtrans}\\
+\tilde{c}^{(b)} &= \tilde{c}^{(m)} \label{eq:ctrans}\\
+p_d^{(b)} &= \expit(p_d^{(m)}), \label{eq:pdtrans}
+\end{align}
+where the $\exp$ of a vector is interpreted to be the vector resulting from
+$\exp$ transforming each component, and where $\expit$ is the standard logistic sigmoid
+function $1/(1+\exp(-x))$, which is the inverse of the $\logit$ function.
+The parameter $O^{(m)}$ is interpreted to be an unconstrained Euclidean vector
+of dimension $\frac{n^2-n}{2}$, and $O^{(b)}$ is obtained from $O^{(m)}$
+by using $O^{(m)}$ to form a skew-symmetric matrix of dimensions $n \times n$, 
+and then applying the matrix exponential map to that skew-symmetric matrix. It is known that
+the matrix exponential of a skew-symmetric matrix is an orthogonal matrix.
+The unconstrained space of parameters (the space of math-scale parameters) 
+is thus a Euclidean space of dimensions $3n+\frac{n^2-n}{2}+2$,
+where: the $3n$ term in this expression comes from the parameters $\vec{\mu}^{(m)}$,
+$\tilde{\vec{\sigma}}_L^{(m)}$, and $\tilde{\vec{\sigma}}_R^{(m)}$;
+the $2$ in this expression comes from the parameters $\tilde{c}^{(m)}$ and
+$p_d^{(m)}$; and the term $\frac{n^2-n}{2}$ in the expression comes from
+the parameters $O^{(m)}$.
+
+The inverse transformation, from the space of biological-scale parameters to the
+space of math-scale parameters, is only a partial inverse. The maps
+(\ref{eq:mutrans})-{\ref{eq:pdtrans}) are readily invertible, but the matrix
+exponential map from the space of skew-symmetric matrices to the space of
+orthogonal matrices is many-to-one and the range comprises the special orthogonal 
+matrices. We use as a partial inverse
+the principle branch of the matrix logarithm. 
+
+\subsection{Initial conditions, and optimizations}\label{sect:inits}
+
+We expressed the log likelihood as a function of math-scale parameters and 
+optimized it with standard numeric optimizers. This required the specification of 
+initial conditions from which to start the optimizations. Multiple initial conditions
+were typically used in order to increase the chances of finding the global
+maximum of the log likelihood function. We here describe how reasonable parameter initial 
+conditions were selected. (To be filled in.)
+%fill
+
+\subsection{Initial screening for successful optimization}\label{sect:screening}
+
+After carrying out multiple optimizations of the log likelihood 
+from distinct initial prameter values
+as described in section \ref{sect:inits}, results of the optimizations
+were compared to help infer characteristics
+of the objective surface and to help judge the likelihood that a global optimum was found.
+For instance, if 1) the best optimization result converged according to the optimizer's 
+assessment of convergence; and 2) multiple optimizations resulted in maximized log likelihood values
+which were within a small increment, $\epsilon$, of the overall best result;
+and 3) if all these results were tightly clustered in parameter space but the initial
+conditions that led to them were spread out; that suggests the log likehood surface has
+a dominant peak with a large ``basin of attraction'' which is plausibly the global 
+maximum.  On the other hand, if 1) the best optimization result did not converge; or 
+2)  secondary optimization results had optimized log likelihood values more than 
+$\epsilon$ less than the best one, or 3) the best optimization results were not tightly
+clustered in parameter space; that suggests one of several log-likelihood pathologies
+may have occurred which required additional exploration and possibly model reformulation. 
+Pathologies include: no internal maximum of the log-likelihood surface (i.e., the supremum of
+the log-likelihood is approached as some parameter asymptotically approaches a boundary
+value - see section \ref{sect:profiling_and_boundary} below); and 
+multiple local maxima of the of the log-likelihood surface exist, with potentially small 
+``basins of attraction'' and 
+correspondingly lower probability that the global maximum was dicovered.
+
+Many assessment of optimization success such as those described above 
+require comparison of optimized parameters.
+Parameter comparison for the XSDM model is complicated by the fact that our parameterizations
+described in previous sections are redundant, with different parameters refering to the 
+same underlying model and resulting in the same log-likelihood value. We here describe these 
+redundancies and how to compensate for them in both juding the likelihood of 
+optimization success and in downstream interpretations of opimization results.
+
+If $\Sigma$ is a positive definite covariance matrix and $\Sigma = O D O^{-1}$
+is the decomposition introduced in section \ref{sect:defns}, 
+the matrices $O$ and $D$ are not determined uniquely by $\Sigma$; but, if the 
+diagonal entries of $D$ (i.e., the eigenvalues of $\Sigma$) are distinct, $O$ and $D$ are
+determined uniquely up to reordering matrix columns and up to multiplying any of the 
+columns of $O$ by $-1$. To see this, let $O_1$ (orthogonal) and $D_1$ (diagonal with
+positive diagonal entries) satisfy $\Sigma=O_1 D_1 O_1^{-1}$.
+This happens if and only if $\Sigma O_1 = O_1 D_1$, which happens for an orthogonal 
+matrix $O_1$ if and only if the columns of $O_1$ are an orthonormal 
+eigenbasis for $\Sigma$.  Reordering the columns of $O_1$ and multiplying any
+of them by $-1$ results in another matrix, $O_2$, the columns of which are another
+orthonormal eigenbasis of $\Sigma$. The columns of $D_1$ have to be reordered
+in the same manner, the resulting matrix denoted
+$D_2$, and then we have $\Sigma O_2 = O_2 D_2$ and therefore $\Sigma = O_2 D_2 O_2^{-1}$. 
+On the other hand, if $\Sigma = O_2 D_2 O_2^{-1}$ for an orthogonal matrix $O_2$ and
+a diagonal matrix with positive diagonal entries, $D_2$, then 
+$\Sigma O_2 = O_2 D_2$, so $O_2$ is another orthonormal eigenbasis for $\Sigma$
+with corresponding eigenvalues along the diagonal of $D_2$. This means $D_2$ is related
+to $D_1$ via a re-ordering (the set of eigenvalues of $\Sigma$ is determined by $\Sigma$). 
+Under the assumption that the eigenvalues of $\Sigma$
+are distinct, the eigenvectors of $\Sigma$ are also determined up to multiplication
+by scalars. But, by orthonormality, those scalars must be $\pm 1$.
+
+If $\Sigma= O_1 D_1 O_1^{-1}$ and the eigenvalues of $\Sigma$ are not distinct, then
+there is additional redundancy in the parameterization of $\Sigma$ by $O_1$ and $D_1$. 
+For each eigenvalue $d_i$ that occurs with
+multiplicity, the corresponding eigenvector columns of $O_1$
+can be replaced by any other orthonormal basis of the subspace they span.
+The resulting matrix $O_2$ will satisfy $\Sigma= O_2 D_1 O_2^{-1}$. 
+In essence, the columns of $O$ specify to an eigenspace decomposition
+of $n$-dimensional Euclidean space, guaranteed by the spectral theorem to 
+exist and to consist of eigenspaces with real, positive eigenvalues.
+Though the eigenspace decomposition is unique, its representation by
+eigenvectors is non-unique as described.
+
+In a similar manner, the parameterization of the growth-environment function
+$\lambda_t(\vec{e}_t,\theta_1)$ by the parameters 
+$\theta_1=\{  \vec{\mu}, \vec{\sigma}_L, \vec{\sigma}_R, O, \lambda_{\text{max}} \}$
+is redundant, in the sense that different parameter values render the same function
+of $\vec{e}_t$. Given any permutation, $\phi$, of $n$ elements, if $\phi$ is
+applied both to the columns of $O$ and to the elements of both $\vec{\sigma}_L$ 
+and $\vec{\sigma}_R$, the same growth-environment function results. Also, if any 
+column, $i$, of $O$ is multiplied by $-1$ and the $i$th elements of $\vec{\sigma}_L$ 
+and $\vec{\sigma}_R$ are exchanged, the same growth-environment function results.  
+Finally, if there exists an index set $i_1,\ldots,i_l$ for which the parameters
+$\sigma_{L,i_1},\ldots,\sigma_{L,i_l}$ and $\sigma_{R,i_1},\ldots,\sigma_{R,i_l}$
+are all equal, the corresponding columns of $O$ can be replaced by any other
+orthonormal basis of the space they span, and the same growth-environment
+function results. 
+
+Now turning to the likelihood function, similar statements are also
+true, i.e., different values of the parameters $\vec{\mu}^{(b)}$,
+$\tilde{\vec{\sigma}}_L^{(b)}$, $\tilde{\vec{\sigma}}_R^{(b)}$, $\tilde{c}^{(b)}$,
+and $p_d^{(b)}$ systematically give the same likelihood. Specifically,
+given any permutation, $\phi$, of $n$ elements, if $\phi$ is
+applied both to the columns of $O$ and to the elements of both $\tilde{\vec{\sigma}}_L^{(b)}$ 
+and $\tilde{\vec{\sigma}}_R^{(b)}$, the same likelihood value results.
+Also, if any 
+column, $i$, of $O$ is multiplied by $-1$ and the $i$th elements of 
+$\tilde{\vec{\sigma}}_L^{(b)}$ 
+and $\tilde{\vec{\sigma}}_R^{(b)}$ are exchanged, the same likelihood 
+value results.
+Finally, if there exists an index set $i_1,\ldots,i_l$ for which the parameters
+$\tilde{\sigma}_{L,i_1}^{(b)},\ldots,\tilde{\sigma}_{L,i_l}^{(b)}$ and 
+$\tilde{\sigma}_{R,i_1}^{(b)},\ldots,\tilde{\sigma}_{R,i_l}^{(b)}$
+are all equal, the corresponding columns of $O$ can be replaced by any other
+orthonormal basis of the subspace they span, and the same likelihood value results. 
+
+The map from the space of math-scale parameters to the space of 
+biological-scale parameters is not bijective, introducing additional complexities
+that must be managed. 
+First, the matrix exponential map from the space of skew-symmetric matrices to the
+space of orthogonal matrices is not surjective because the range of the map
+is the special orthogonal matrices, i.e., those with determinant $1$, whereas 
+orthogonal matrices can have determinant $1$ or $-1$. This makes no difference,
+however, because, given any orthogonal matrix with determinant $-1$, one can
+multiply any single column by $-1$ or switch two columns, changing the determinant to
+$1$. As discussed above, this will not alter the resulting growth-environment function
+or likelihood value; so our parameterization covers all necessary $O^{(b)}$ values.
+Equations (\ref{eq:mutrans})-(\ref{eq:pdtrans}) define bijective maps, except 
+$p_d^{(b)}=1$ is not in the range of the $p_d$ map; this bounadry case is dealt with in section
+\ref{sect:profiling_and_boundary}), below. 
+
+The matrix exponential map from skew-symmetric matrices to special orthogonal matrices is 
+also many-to-one. This does not prevent us
+from maximizing the likelihood function on the math scale, but it does mean that
+there will be multiple optima on the math scale which have the same likelihood value
+and correspond to the same parameters on the biological scale. 
+
+The way we deal with the various forms of redundancy outlined above during the effort,
+outlined at the beginning of this section, of assessing whether we successfully
+optimized, is as follows. Suppose we ran $N$ log-likelihood
+optimizations, and the resulting log-likelihood values are $L_i$, $i=1,\ldots,N$
+and best parameters from each optimization are 
+$\vec{\mu}^{(m),i}$, $O^{(m),i}$, $\tilde{\vec{\sigma}}_L^{(m),i}$,
+$\tilde{\vec{\sigma}}_R^{(m),i}$, $\tilde{c}^{(m),i}$, and $p_d^{(m),i}$,
+$i=1,\ldots,N$. We assume the results have been sorted so that $L_1 \geq L_2 \geq 
+\ldots, L_N$. We want to assess whether the top several results produced similar
+parameters, but we know differing math-scale parameters can represent the same
+underlying model. So, prior to comparing parameters from different optimizations,
+we convert all parameter results to the biological scale, 
+$\vec{\mu}^{(b),i}$, $O^{(b),i}$, $\tilde{\vec{\sigma}}_L^{(b),i}$,
+$\tilde{\vec{\sigma}}_R^{(b),i}$, $\tilde{c}^{(b),i}$, and $p_d^{(b),i}$,
+$i=1,\ldots,N$. But we know differing biological-scale parameters can also
+represent the same underlying model, the redundancy, described above, lying
+with the parameters $O^{(b),i}$, $\tilde{\vec{\sigma}}_L^{(b),i}$, and
+$\tilde{\vec{\sigma}}_R^{(b),i}$. So we convert these biological-scale parameters
+into ``canonical form'' as follows. We first multiply columns of $O^{(b),i}$
+by $-1$, as necessary, to ensure that the top element of each column is non-negative.
+We meanwhile switch corresponding elements of $\tilde{\vec{\sigma}}_L^{(b),i}$ and
+$\tilde{\vec{\sigma}}_R^{(b),i}$, to ensure that our alterations do not alter the
+underlying likelihood. We then re-order the columns to put them in dictionary order.
+We meanwhile reorder the entries of  $\tilde{\vec{\sigma}}_L^{(b),i}$ and
+$\tilde{\vec{\sigma}}_R^{(b),i}$ using the same permutation, again 
+to ensure that our alterations do not alter the
+underlying likelihood. The resulting parameters for $i=1,\ldots,N$ can then 
+be directly compared.
+
+\section{Profiling and boundary models}\label{sect:profiling_and_boundary}
+
+\subsection{Profiling} 
+
+To be filled in. We profile on the math scale.
+
+\subsection{The need for boundary models}
+
+Ocassionally profiles are non-peaked, e.g., the profile appears to asymmptotically
+approach some supremum log-likelihood value from below as the profile parameter takes more
+and more extreme values to the right or to the left. Profiles can also be weakly peaked, 
+i.e., exhibiting a maximum but then approaching a log-likelihood asymptote, from above,
+as the profile parameter takes extreme values to the left or right; and the asymptote
+log-likelihood value is not much less than the maximum.
+Examples of these cases are in Fig. X.
+%DAN: Need to make these examples and make a figure. Make sure it has th significance threshold.
+The first of these cases indicates that the likelihood does not have an ``internal maximum"
+in the space of math-scale parameters. For instance, it is not uncommon for profiles 
+with respect to the parameter $p_d^{(m)} = \logit(p_d^{(b)})$ to be unpeaked, 
+asymptotically approaching some log-likelihood value as $p_d^{(m)} \rightarrow \infty$
+(Fig. Xa). %DAN: Make sure one of your panels shows this.
+This indicates that the value $p_d^{(b)}=1$ would produce a model that is as 
+well or better supported by data than a model with $p_d^{(b)}<1$, though our fitting
+and profiling procedures do not consider $p_d^{(b)}=1$ or other boundary cases because
+of the parameterizations we use ($1$ is not in the range of the $\logit$ map). 
+We remind the reader that maximum likelihood
+results and profiles are only valid, strictly speaking, when the likelihood has a maximum
+and when the likelihood surface
+in the vacinity of the maximum resembles a parabaloid, in particular meaning
+profiles are peaked and approximately resemble inverted parabolas. Cases such as those
+described above indicate that a simpler, ``boundary model'' (e.g., one with
+$p_d^{(b)}$ fixed at $1$) should be fitted with occurrence data. 
+We next formulate boundary models.
+
+\subsection{The boundary models and related models}
+
+The first boundary model is straightforward. Because the log-likelihood, which is 
+based on (\ref{eq:probdetect}), is well defined for $p_d^{(b)}=1$, this values can 
+be fixed. The likelihood then depends on the other parameters, which can be considered
+in the math or biological scale (the math scale is used for maximizing and profiling). 
+We do not consider the boundary case $p_d^{(b)}=0$ because the likelihood will be 
+zero for that case if there are any detections of the species. 
+
+We also consider the set of boundary models for which, for any given $i$, one (but not 
+both) of $\tilde{\sigma}_{L,i}$ and
+$\tilde{\sigma}_{R,i}$ is infinite, so that $u_{t,i}/\tilde{\sigma}_{L,i}$
+or $u_{t,i}/\tilde{\sigma}_{R,i}$ is interpreted to be $0$ in (\ref{eq:probdetect}).
+This corresponds to a case where population growth is insensitive to extreme
+values of an environmental variable in one extreme but not the other.
+We do not here consider $\tilde{\sigma}_{R,i}=\tilde{\sigma}_{R,i}=\infty$ because that
+is equivalent to a model where population growth is influenced by $n-1$ 
+environmental variables.  Equation (\ref{eq:probdetect}) is still defined as 
+a function of the other parameters, and the likelihood can be computed, and maximized
+on the math scale, and profiled. There are $3^n-1$ such boundary models, because for
+each index $i=1,\ldots,n$, one can set to $\infty$ the parameter $\tilde{\sigma}_{L,i}$ or
+$\tilde{\sigma}_{R,i}$ or neither, but not both (this gives $3^n$); but the model
+where none of these is set to $\infty$ is the original model, not a boundary model
+(making the final count $3^n-1$). Typically a boundary model of this type is
+only fitted if maximization or profiling of the main model indicates it is
+warranted, for instance if the profile of one of the parameters $\tilde{\sigma}_{L,i}$ and
+$\tilde{\sigma}_{R,i}$ asymptotes as the parameters goes to $\infty$ instead of having 
+a maximum at a finite value. For this paragraph, it does not matter whether we
+use the math- or biological-scale parameters, so we have not used either superscript
+$(m)$ or the superscript $(b)$.
+
+We consider one additional, optional type of simplified model.
+If the maximum-likelihood estimates 
+$\hat{\tilde{\sigma}}_{L,1},\ldots,\hat{\tilde{\sigma}}_{L,n}$ and 
+$\hat{\tilde{\sigma}}_{R,1},\ldots,\hat{\tilde{\sigma}}_{R,n}$
+are all equal or close to equal, the maximum-likelihood estimate
+$\hat{O}^{(b)}$ will not
+be precisely determined by the data. For instance, in the $n=2$ case, if
+maximum-likelihood estimates $\hat{\tilde{\sigma}}_{L,1}$, $\hat{\tilde{\sigma}}_{L,2}$,  
+$\hat{\tilde{\sigma}}_{R,1}$, and $\hat{\tilde{\sigma}}_{R,2}$ are all equal, then the
+level curves of the growth environment function are circles, and all possible
+$O^{(b)}$ give the same growth environment function and therefore the same 
+likelihood. If the maximum-likelihood estimates
+of $\hat{\tilde{\sigma}}_{L,1}$, $\hat{\tilde{\sigma}}_{L,2}$,  
+$\hat{\tilde{\sigma}}_{R,1}$, and $\hat{\tilde{\sigma}}_{R,2}$ are very similar but not equal,
+then the level curves of the growth environment function are nearly circles,
+and different $O^{(b)}$ values result in different but very similar growth-environment
+functions which should produce similar likelihood values. In such a case, 
+likelihood profiles of the parameters in $O^{(m)}$ should be flat or close to 
+flat, rendering it statistically impossible to determine specific values of 
+$O^{(m)}$ with any certainty. We hasten to add, however, that this makes little
+practical difference because all these alternative values of $O^{(m)}$ give similar
+growth-environment functions and therefore similar models, which will result
+in similar habitat suitability maps and range maps for the species.
+Returning to the case of general $n$, we consider the simplified model where 
+all the parameters $\tilde{\sigma}_{L,1},\ldots,\tilde{\sigma}_{L,n}$ and 
+$\tilde{\sigma}_{R,1},\ldots,\tilde{\sigma}_{R,n}$
+are constrained to be equal, replacing $2n$ free parameters by one free 
+parameter; and where the matrix parameter $O^{(b)}$ is fixed at the identity matrix.
+This greatly simplified model should typically be easier to fit,
+and can be compared via AIC (or another criterion) to the original model.
+Cases where there exists an index set $i_1,\ldots,i_l$ with $1<l<n$ for which the 
+maximum-likelihood estimates 
+$\hat{\tilde{\sigma}}_{L,i_1},\ldots,\hat{\tilde{\sigma}}_{L,i_l}$ and 
+$\hat{\tilde{\sigma}}_{R,i_1},\ldots,\hat{\tilde{\sigma}}_{R,i_l}$
+for the original model are all equal or close to equal can also suggest that
+reduced models may be worth considering, but
+we leave such considerations for future work. 
+
+\end{document}
