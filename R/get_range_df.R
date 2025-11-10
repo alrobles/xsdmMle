@@ -26,10 +26,10 @@ get_range_df <- function(env_dat, quant_vec = c(0.1, 0.5, 0.9)) {
   pd_inds <- (1 + q + 3 * p):(numparms(p) - 1)
   ctil_inds <- numparms(p)
 
-  rownames(ranges)[o_inds] <- paste0("O", 1:q)
+  rownames(ranges)[o_inds] <- paste0("o_par", 1:q)
   rownames(ranges)[mu_inds] <- paste0("mu", 1:p)
-  rownames(ranges)[sigl_inds] <- paste0("sigLtil", 1:p)
-  rownames(ranges)[sigr_inds] <- paste0("sigRtil", 1:p)
+  rownames(ranges)[sigl_inds] <- paste0("sigl", 1:p)
+  rownames(ranges)[sigr_inds] <- paste0("sigr", 1:p)
   rownames(ranges)[pd_inds] <- "pd"
   rownames(ranges)[ctil_inds] <- "ctil"
 

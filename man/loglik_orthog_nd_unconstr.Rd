@@ -38,7 +38,7 @@ parameters, environmental variables and presence-absences ocurrences.
 log likelihood orthogonal
 }
 \examples{
-env_dat <- env_dat_ex
+env_dat <- envdat_ex
 occ <- occExample
 params <- paramTableExample[5, ]
 param_vector <- params
