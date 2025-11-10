@@ -186,7 +186,7 @@ profile_optim_par <- function(optim_vec, envdat, pa, stepsize = 0.001,
     .options = furrr::furrr_options(seed = NULL), .progress = TRUE
     )
   } else {
-    res <- purrr::map(1:length(optim_vec), \(x){
+    res <- purrr::map(seq_along(optim_vec), \(x){
       f_test(optim_vec, parindex = x)
     }, .progress = TRUE)
   }
