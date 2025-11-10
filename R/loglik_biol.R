@@ -1,7 +1,7 @@
 #' Logarithm of the likelihood oof detection of a species
-#' @param env_dat The environmental data array
-#' @param occ Presence absence binary vector
-#' @param mu A vector of mu parameters
+#' @param env_dat The environmental data array. This is a three dimensional array of dimensions (number of locations of species detection or pseudo-absence) by (time series length) by (number of environmental variables considered).
+#' @param occ Presence absence binary vector. Same length as dimension 1 of env_dat.
+#' @param mu A vector of mu parameters. Unconstrained real numbers. Same length as dimension 3 of env_dat. 
 #' @param sigl A vector of sigl parameters
 #' @param sigr A vector of sigr parameters
 #' @param ctil C tilde parameter
@@ -39,12 +39,19 @@
 #'   o_mat = o_mat
 #' )
 #' ll
-loglik_orthog_nd <- function(env_dat, occ, mu, sigl, sigr, ctil, pd, o_mat,
+loglik_biol <- function(env_dat, occ, mu, sigl, sigr, ctil, pd, o_mat,
                              num_threads = RcppParallel::defaultNumThreads(),
                              sum_logp = TRUE,
                              return_prob = FALSE) {
-  RcppParallel::setThreadOptions(numThreads = num_threads)
 
+  #establish the desired number of threads to use
+  RcppParallel::setThreadOptions(numThreads = num_threads)
+  #DAN: Angel, you currently go to the number of threads the user wants, and
+  #then you return to the *default* when the function is done. But what if the
+  #numThreads setting was not the default when the function is called. Instead,
+  #cane you please save, here, in a variable, the current value of numThreads, 
+  #and then restore *that* at the end instead of the default?
+  
   # get the probability of detection for each location
   log_p <- log_prob_detect(
     env_dat = env_dat,
@@ -56,15 +63,22 @@ loglik_orthog_nd <- function(env_dat, occ, mu, sigl, sigr, ctil, pd, o_mat,
     o_mat = o_mat,
     return_prob = FALSE
   )
+  
+  #If sum_logp is TRUE, the user wants the location-specific log-likelihoods to be
+  #summed, otherwise they want them separately as a vector.
   if (sum_logp) {
     res <- sum(occ * log_p + (1 - occ) * log1mexp(-log_p))
   } else {
     res <- occ * log_p + (1 - occ) * copula::log1mexp(-log_p)
   }
 
+  #If return_prob is TRUE the user wants linear-scale instead of log-scale likelihoods.
   if (return_prob == TRUE) {
     res <- exp(res)
   }
+  
+  #return to the earlier number-of-threads settings
   RcppParallel::setThreadOptions(numThreads = RcppParallel::defaultNumThreads())
+
   return(res)
 }
