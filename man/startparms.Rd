@@ -3,7 +3,7 @@
 \name{startparms}
 \alias{startparms}
 \title{startparms Starting parameters for the optimization.
-Given a set of ranges of values of environmental variables where the 
+Given a set of ranges of values of environmental variables where the
 presence of a species occurs,generates a Latin hypercube design
 for the parameters based on the Sobol' low-discrepancy sequence.}
 \usage{
@@ -22,11 +22,11 @@ A data frame with samples for each parameter to optimize
 }
 \description{
 startparms Starting parameters for the optimization.
-Given a set of ranges of values of environmental variables where the 
+Given a set of ranges of values of environmental variables where the
 presence of a species occurs,generates a Latin hypercube design
 for the parameters based on the Sobol' low-discrepancy sequence.
 }
 \examples{
-envdat_ex_occ <- envdat_ex[ , , occExample == 1] 
+envdat_ex_occ <- envdat_ex[, , occExample == 1]
 startparms(envdat_ex_occ)
 }

@@ -4,11 +4,17 @@
 \name{xsdmMle-package}
 \alias{xsdmMle}
 \alias{xsdmMle-package}
-\title{xsdmMle: Concise Summary of What the Package Does}
+\title{xsdmMle: Demographic Approach to Species Distribution Model}
 \description{
-More about what it does (maybe more than one line).
+Integrates concepts of stochastic demography into species distribution modelling. The main approach is maximize the likelihood function with environmental information from the presence/absence. This inference can be used to project species geographic range. Data requirements include species detection records and spatiotemporal environmental data.
 }
 \author{
-\strong{Maintainer}: Your Name \email{your@email.com}
+\strong{Maintainer}: Angel Luis Robles Fernandez \email{a.l.robles.fernandez@gmail.com} (\href{https://orcid.org/0000-0002-4674-4270}{ORCID})
+
+Authors:
+\itemize{
+  \item Emilio Berti \email{emilio.berti@idiv.de} (\href{https://orcid.org/0000-0001-9286-011X}{ORCID})
+  \item Daniel C. Reuman \email{reuman@ku.edu} (\href{https://orcid.org/0000-0002-1407-8947}{ORCID})
+}
 
 }

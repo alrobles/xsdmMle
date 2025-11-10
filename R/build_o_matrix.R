@@ -4,23 +4,20 @@
 #' @export
 #'
 #' @examples
-#' build_O_matrix(0) #Identity
-build_O_matrix <- function(entries){
+#' build_o_matrix(0) # Identity
+build_o_matrix <- function(entries) {
   entries <- as.numeric(entries)
-  #get number of matrix entries given the parameter vector
-  if(is.null(entries) ){
-    return(matrix(1, 1, 1))
-  } else{
+  # get number of matrix entries given the parameter vector
+  if (is.null(entries)) {
+    matrix(1, 1, 1)
+  } else {
     f <- function(n) 0.5 * (1 + sqrt(8 * n + 1))
     k <- f(length(entries))
-    
+
     sk <- matrix(0, nrow = k, ncol = k)
     sk[lower.tri(sk)] <- entries
-    sk = sk - t(sk)
-    O = expm::expm(sk)
-    return(O)
+    sk <- sk - t(sk)
+    o_mat <- expm::expm(sk)
+    o_mat
   }
-  
-  
 }
-

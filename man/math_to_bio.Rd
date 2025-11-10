@@ -8,17 +8,17 @@ to fit the log likelihood function.}
 math_to_bio(param_vector)
 }
 \arguments{
-\item{param_vector}{A vector of unconstrained parameters to create a list for the
-likelihood function}
+\item{param_vector}{A vector of unconstrained parameters to create a list for
+the likelihood function}
 }
 \value{
 A list of parameters to pass to the log likelihood function.
-It contains O, mu, sigLtil, sigRtil, ctil, pd
+It contains o_par, mu, sigl, sigr, ctil, pd
 }
 \description{
 Convert a unconstrained vector of parameters in a list of parameters
 to fit the log likelihood function.
 }
 \examples{
-math_to_bio(paramTableExample[1, ])
+math_to_bio(param_table_example[1, ])
 }

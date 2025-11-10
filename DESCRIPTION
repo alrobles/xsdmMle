@@ -1,7 +1,7 @@
 Package: xsdmMle
 Type: Package
 Title: Demographic Approach to Species Distribution Model
-Version: 0.0.1
+Version: 0.1.0
 Date: 2025-08-28
 Authors@R: c(
     person("Emilio", "Berti", , "emilio.berti@idiv.de", role = c("aut"),
@@ -40,3 +40,6 @@ Encoding: UTF-8
 Depends: 
     R (>= 3.5)
 LazyData: true
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

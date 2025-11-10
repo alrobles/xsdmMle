@@ -8,8 +8,7 @@ between parameters}
 make_cannonical(bparms)
 }
 \arguments{
-\item{bparms}{A list with parameters
-to adjust to a canonical form}
+\item{bparms}{A list with parameters to adjust to a canonical form}
 }
 \value{
 A list  with parameters in canonical form
@@ -20,7 +19,7 @@ between parameters
 }
 \examples{
 
-paramTableExample[1, ] |> 
-math_to_bio() |>
- make_cannonical()
+param_table_example[1, ] |>
+  math_to_bio() |>
+  make_cannonical()
 }

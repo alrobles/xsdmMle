@@ -3,7 +3,7 @@
 \docType{data}
 \name{cmcc_cm_bio1}
 \alias{cmcc_cm_bio1}
-\title{cmcc_cm bio1 time serires}
+\title{cmcc_cm bio1 time series}
 \format{
 A raster time serires with 30 years of bio01 data
 }
@@ -14,7 +14,7 @@ cmcc_cm_bio1
 DATASET_DESCRIPTION
 }
 \details{
-The data comes from chelsav1 time serires for
-cmcc_cm model. We compute bio01 (Anual tas average) for a 30 years time serires
+The data comes from chelsav1 time series for cmcc_cm model.
+We compute bio01 (Anual tas average) for a 30 years time series
 }
 \keyword{datasets}

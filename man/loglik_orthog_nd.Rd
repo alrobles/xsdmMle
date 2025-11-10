@@ -5,46 +5,46 @@
 \title{Logarithm of the likelihood oof detection of a species}
 \usage{
 loglik_orthog_nd(
-  envdat,
-  pa,
+  env_dat,
+  occ,
   mu,
-  sigLtil,
-  sigRtil,
+  sigl,
+  sigr,
   ctil,
   pd,
-  O,
+  o_mat,
   num_threads = RcppParallel::defaultNumThreads(),
   sum_logp = TRUE,
   return_prob = FALSE
 )
 }
 \arguments{
-\item{envdat}{The environmental data array}
+\item{env_dat}{The environmental data array}
 
-\item{pa}{Presence absence binary vector}
+\item{occ}{Presence absence binary vector}
 
-\item{mu}{A vector of mu}
+\item{mu}{A vector of mu parameters}
 
-\item{sigLtil}{A vector of sigl}
+\item{sigl}{A vector of sigl parameters}
 
-\item{sigRtil}{A vector of sigr}
+\item{sigr}{A vector of sigr parameters}
 
 \item{ctil}{C tilde parameter}
 
 \item{pd}{Probability of detection. Parameter between 0 and 1}
 
-\item{O}{An orthogonal matrix}
+\item{o_mat}{An orthogonal matrix}
 
 \item{num_threads}{The number of threads for parallel computing}
 
-\item{sum_logp}{Logical (default TRUE) returns the sum of log of probability 
+\item{sum_logp}{Logical (default TRUE) returns the sum of log of probability
 detection}
 
-\item{return_prob}{Logical (default FALSE) returns the probability of detections
-instead the log of proabilities}
+\item{return_prob}{Logical (default FALSE) returns the probability of
+detections instead the log of probabilities}
 }
 \value{
-The value of the logarithm of the likelihood function in the 
+The value of the logarithm of the likelihood function in the
 provided parameters for a given set of environmetnal conditions an presence
 absence locations
 }
@@ -52,16 +52,24 @@ absence locations
 Logarithm of the likelihood oof detection of a species
 }
 \examples{
-O <-  paramListExample$O
-mu <- paramListExample$mu
-sigLtil <- paramListExample$sigLtil
-sigRtil <- paramListExample$sigRtil
-pd <- paramListExample$pd
-ctil <- paramListExample$ctil
-envdat <- envdat_ex
-pa <- occExample
+o_mat <- param_list_example$o_mat
+mu <- param_list_example$mu
+sigl <- param_list_example$sigl
+sigr <- param_list_example$sigr
+pd <- param_list_example$pd
+ctil <- param_list_example$ctil
+env_dat <- envdat_ex
+occ <- occExample
 
-ll <- loglik_orthog_nd(envdat_ex, pa , mu = mu, sigLtil = sigLtil,
-sigRtil =  sigLtil, ctil = ctil, pd = pd, O = O)  
-
+ll <- loglik_orthog_nd(
+  env_dat,
+  occ,
+  mu = mu,
+  sigl = sigr,
+  sigr = sigl,
+  ctil = ctil,
+  pd = pd,
+  o_mat = o_mat
+)
+ll
 }

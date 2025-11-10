@@ -4,10 +4,10 @@
 \alias{vsp}
 \title{Virtual species}
 \usage{
-vsp(envData, param_list)
+vsp(env_data, param_list)
 }
 \arguments{
-\item{envData}{A list of time serires rasters of bioclimatic variables}
+\item{env_data}{A list of time series rasters of bioclimatic variables}
 
 \item{param_list}{A list of parameters}
 }
