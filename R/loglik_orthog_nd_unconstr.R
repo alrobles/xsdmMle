@@ -48,7 +48,7 @@ loglik_orthog_nd_unconstr <- function(param_vector,
 
   f <- function(env, occ) {
     function(mu, sigl, sigr, ctil, pd, o_mat) {
-      loglik_orthog_nd(env, occ, mu, sigl, sigr, ctil, pd, o_mat)
+      loglik_biol(env, occ, mu, sigl, sigr, ctil, pd, o_mat)
     }
   }
   f_par <- f(env_dat, occ)
