@@ -7,3 +7,4 @@
 ^R_debug$
 ^\.github$
 ^codecov\.yml$
+^badges$
