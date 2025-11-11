@@ -19,11 +19,16 @@ loglik_biol(
 )
 }
 \arguments{
-\item{env_dat}{The environmental data array. This is a three dimensional array of dimensions (number of locations of species detection or pseudo-absence) by (time series length) by (number of environmental variables considered).}
+\item{env_dat}{The environmental data array. This is a three dimensional
+array of dimensions (number of locations of species detection or
+pseudo-absence) by (time series length) by (number of environmental variables
+considered).}
 
-\item{occ}{Presence absence binary vector. Same length as dimension 1 of env_dat.}
+\item{occ}{Presence absence binary vector. Same length as dimension 1 of
+env_dat.}
 
-\item{mu}{A vector of mu parameters. Unconstrained real numbers. Same length as dimension 3 of env_dat.}
+\item{mu}{A vector of mu parameters. Unconstrained real numbers. Same length
+as dimension 3 of env_dat.}
 
 \item{sigl}{A vector of sigl parameters}
 

@@ -1,7 +1,12 @@
 #' Logarithm of the likelihood oof detection of a species
-#' @param env_dat The environmental data array. This is a three dimensional array of dimensions (number of locations of species detection or pseudo-absence) by (time series length) by (number of environmental variables considered).
-#' @param occ Presence absence binary vector. Same length as dimension 1 of env_dat.
-#' @param mu A vector of mu parameters. Unconstrained real numbers. Same length as dimension 3 of env_dat. 
+#' @param env_dat The environmental data array. This is a three dimensional
+#' array of dimensions (number of locations of species detection or
+#' pseudo-absence) by (time series length) by (number of environmental variables
+#' considered).
+#' @param occ Presence absence binary vector. Same length as dimension 1 of
+#' env_dat.
+#' @param mu A vector of mu parameters. Unconstrained real numbers. Same length
+#' as dimension 3 of env_dat. 
 #' @param sigl A vector of sigl parameters
 #' @param sigr A vector of sigr parameters
 #' @param ctil C tilde parameter
@@ -59,12 +64,12 @@ loglik_biol <- function(env_dat, occ, mu, sigl, sigr, ctil, pd, o_mat,
     return_prob = FALSE
   )
   
-  # If sum_logp is TRUE, the user wants the location-specific log-likelihoods
+  # If sum_log_p is TRUE, the user wants the location-specific log-likelihoods
   # to be summed, otherwise they want them separately as a vector.
   if (sum_log_p) {
     res <- sum(occ * log_p + (1 - occ) * log1mexp(-log_p))
   } else {
-    res <- occ * log_p + (1 - occ) * copula::log1mexp(-log_p)
+    res <- occ * log_p + (1 - occ) * log1mexp(-log_p)
   }
 
   # If return_prob is TRUE the user wants linear-scale instead of log-scale

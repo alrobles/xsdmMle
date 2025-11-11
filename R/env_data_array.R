@@ -15,7 +15,15 @@
 #' env_data <- list(bio1 = bio1_ts, bio12 = bio12_ts)
 #' env_data_array(env_data, occ)
 env_data_array <- function(env_data, occ = NULL) {
+  
+  checkmate::assert_list(env_data, any.missing = FALSE, null.ok = FALSE, min.len = 1)
+  checkmate::assert_data_frame(occ, any.missing = FALSE, null.ok = TRUE)
+  
+  
   if (!is.null(occ)) {
+    #Check if the not NULL data frame has specific column names
+    checkmate::assert_names(names(occ), must.include = c("name", "longitude",
+                                                         "latitude", "presence"))
     pts <- terra::vect(occ, geom = c("longitude", "latitude"))
 
     if (length(env_data) == 1) {
@@ -54,6 +62,5 @@ env_data_array <- function(env_data, occ = NULL) {
       env_data_array <- aperm(env_data_array)
     }
   }
-
-  return(env_data_array)
+  env_data_array
 }

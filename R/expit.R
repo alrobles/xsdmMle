@@ -11,6 +11,7 @@
 #' expit(0.5)
 #' expit(-1)
 expit <- function(x) {
+  checkmate::assert_numeric(x)
   out <- exp(x) / (1 + exp(x))
   out[x > 100] <- 1
   out

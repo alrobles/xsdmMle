@@ -7,7 +7,7 @@
 build_o_matrix(entries)
 }
 \arguments{
-\item{entries}{A vector of entries to build the orthogonal matrix.}
+\item{entries}{A numeric vector of entries to build the orthogonal matrix.}
 }
 \value{
 An orthogonal matrix of dimensions according to the given vector

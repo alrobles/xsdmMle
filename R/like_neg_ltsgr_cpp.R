@@ -22,6 +22,7 @@
 #'   sigr = sigl,
 #'   o_mat = o_mat
 #' )
+#' 
 like_neg_ltsgr_cpp <- function(env_dat,
                                mu,
                                sigl,
@@ -58,7 +59,7 @@ like_neg_ltsgr_cpp <- function(env_dat,
     q = ts_length,
     r = n
   )
-
+  
   RcppParallel::setThreadOptions(numThreads = RcppParallel::defaultNumThreads())
 
   return(res)

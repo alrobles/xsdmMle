@@ -12,6 +12,9 @@
 #' @examples
 #' expit_general(3, -pi, pi, 0)
 expit_general <- function(x, l_bound, u_bound, x0) {
+  checkmate::assert_numeric(x)
+  checkmate::assert_numeric(l_bound)
+  checkmate::assert_numeric(u_bound)
   out <- l_bound + (u_bound - l_bound) / (1 + exp(-(x - x0)))
   out[x > 100] <- u_bound
   out[x < -100] <- l_bound

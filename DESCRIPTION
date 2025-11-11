@@ -19,7 +19,7 @@ Description: Integrates concepts of stochastic demography into species
     environmental data.
 License: GPL (>= 3)
 Imports: 
-    copula,
+    checkmate,
     expm,
     furrr,
     future,

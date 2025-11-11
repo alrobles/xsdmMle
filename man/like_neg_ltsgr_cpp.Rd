@@ -46,4 +46,5 @@ M <- like_neg_ltsgr_cpp(
   sigr = sigl,
   o_mat = o_mat
 )
+
 }

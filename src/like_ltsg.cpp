@@ -45,7 +45,7 @@ struct ColumnWorker : public Worker {
   }
 };
 
-// [[Rcpp::export(like_ltsg)]] 
+//[[Rcpp::export]] 
 NumericVector like_ltsg(NumericVector mu,  
                    NumericMatrix env_m,
                    NumericMatrix dl_mat,

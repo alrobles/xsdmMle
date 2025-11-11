@@ -6,3 +6,4 @@
 ^manual$
 ^R_debug$
 ^\.github$
+^codecov\.yml$
