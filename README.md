@@ -5,6 +5,8 @@
 
 <!-- badges: start -->
 
+[![Codecov test
+coverage](https://codecov.io/gh/alrobles/xsdmMle/graph/badge.svg)](https://app.codecov.io/gh/alrobles/xsdmMle)
 <!-- badges: end -->
 
 The goal of xsdmMle is to fit
