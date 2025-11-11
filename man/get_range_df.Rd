@@ -9,11 +9,11 @@ get_range_df(env_dat, quant_vec = c(0.1, 0.5, 0.9))
 }
 \arguments{
 \item{env_dat}{An environmental array with dimenssions given by
-environmental variables, time serires steps and locations.
-Should provide an environmental array where the detections are possitive}
+environmental variables, time series steps and locations.
+Should provide an environmental array where the detections are positive}
 
 \item{quant_vec}{A vector of quantiles to limit the range of the
-parameters given the occurrence in the environmental time serires.
+parameters given the occurrence in the environmental time series.
 Default is set to c(0.1, 0.5, 0.9) to center in the median value}
 }
 \value{

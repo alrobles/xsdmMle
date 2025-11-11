@@ -11,9 +11,14 @@
 #' of starting parameters
 get_start_parms <- function(ranges, numstarts = 100) {
   # now get the actual start parameters, math scale
+  
+  checkmate::assert_data_frame(ranges, any.missing = FALSE, ncols = 3)
+  checkmate::assert_number(numstarts)
+  checkmate::assert_names(names(ranges), must.include = c("lower", "center", "upper"))
+  
+  
   lower <- ranges[, 1]
   names(lower) <- rownames(ranges)
-
   center <- ranges[, 2]
   names(center) <- rownames(ranges)
   upper <- ranges[, 3]
