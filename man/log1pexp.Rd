@@ -9,24 +9,27 @@ log1pexp(x, c0 = -37, c1 = 18, c2 = 33.3)
 \arguments{
 \item{x}{Numeric vector of input values.}
 
-\item{c0, c1, c2}{Numeric scalars used as cutoffs for switching between formulas 
-for optimal numerical stability. Defaults are chosen for best precision.}
+\item{c0, c1, c2}{Numeric scalars used as cutoffs for switching between
+formulas for optimal numerical stability. Defaults are chosen for best
+precision.}
 }
 \value{
-A numeric vector of the same length as \code{x}, where each element is:
+A numeric vector of the same length as \code{x}, where each element
+is:
 \itemize{
   \item \eqn{\log(1 - \exp(-a))} computed accurately for positive \code{a}.
   \item \eqn{\log(1 + \exp(x))} computed accurately for any \code{x}.
 }
 }
 \description{
-This function computes either \eqn{\log(1 - \exp(-a))} or \eqn{\log(1 + \exp(x))} 
-in a numerically stable way, avoiding catastrophic cancellation for extreme values.
-The implementation is adapted from Martin Mächler's original function in the \pkg{copula} package.
+This function computes either \eqn{\log(1 - \exp(-a))} or
+\eqn{\log(1 + \exp(x))} in a numerically stable way, avoiding catastrophic
+cancellation for extreme values. The implementation is adapted from Martin
+Mächler's original function in the \pkg{copula} package.
 }
 \details{
-Direct computation of these expressions can suffer from floating-point errors 
-when arguments are very small or very large. This function switches between 
+Direct computation of these expressions can suffer from floating-point errors
+when arguments are very small or very large. This function switches between
 stable formulas:
 \itemize{
   \item \code{log(-expm1(-a))} for small \code{a}.
@@ -35,7 +38,8 @@ stable formulas:
 }
 }
 \note{
-For \eqn{\log(1 - \exp(-a))}, \code{a} should be non-negative. A warning is issued if \code{a < 0}.
+For \eqn{\log(1 - \exp(-a))}, \code{a} should be non-negative. A warning is
+issued if \code{a < 0}.
 }
 \examples{
 # Compare log1p(exp(x)) with stable implementation

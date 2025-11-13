@@ -44,15 +44,16 @@ params <- param_table_example[5, ]
 param_vector <- params
 loglik_math(params, env_dat, occ)
 
-opt_a <- c(mu1 = NA_real_,
-           mu2 = 0,
-           sigl1 = NA_real_,
-           sigl2 = NA_real_,
-           sigr1 = NA_real_,
-           sigr2 = NA_real_,
-           ctil = NA_real_,
-           pd = NA_real_,
-           opar_1 = NA_real_
-           )
+opt_a <- c(
+  mu1 = NA_real_,
+  mu2 = 0,
+  sigl1 = NA_real_,
+  sigl2 = NA_real_,
+  sigr1 = NA_real_,
+  sigr2 = NA_real_,
+  ctil = NA_real_,
+  pd = NA_real_,
+  opar_1 = NA_real_
+)
 loglik_math(params, env_dat, occ, opt = opt_a)
 }

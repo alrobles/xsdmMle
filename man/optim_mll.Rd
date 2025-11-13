@@ -9,7 +9,7 @@ optim_mll(env_dat, occ, parallel = FALSE, numstarts = 100)
 \arguments{
 \item{env_dat}{A 3D numeric array of environmental time series data.}
 
-\item{occ}{A logical or numeric vector indicating presence (1) or absence (0).}
+\item{occ}{A logical or numeric vector indicating presence or absence (1/0).}
 
 \item{parallel}{Logical; if \code{TRUE}, optimization runs in parallel using
 \pkg{furrr} and \pkg{future}. Defaults to \code{FALSE}.}
@@ -19,7 +19,8 @@ Defaults to \code{100}.}
 }
 \value{
 A tibble with optimized parameter sets and their corresponding
-log-likelihood values, sorted in decreasing order of likelihood. Columns include:
+log-likelihood values, sorted in decreasing order of likelihood.
+Columns include:
 \itemize{
   \item Estimated parameters.
   \item \code{value}: the optimized log-likelihood.

@@ -4,17 +4,17 @@
 \alias{like_ltsg}
 \title{Compute likelihood for LTSG model}
 \arguments{
-\item{mu}{Numeric vector of means (length equal to number of rows in `env_m`).}
+\item{mu}{Numeric vector of means (length equal to number of rows in `env_m`)}
 
-\item{env_m}{Numeric matrix of environmental data.}
+\item{env_m}{Numeric matrix of environmental data}
 
-\item{dl_mat}{Diagonal matrix (as NumericMatrix).}
+\item{dl_mat}{Diagonal matrix (as NumericMatrix)}
 
-\item{drl_mat}{Diagonal matrix (as NumericMatrix).}
+\item{drl_mat}{Diagonal matrix (as NumericMatrix)}
 
-\item{ortho_m}{Numeric matrix (orthogonal basis).}
+\item{ortho_m}{Numeric matrix (orthogonal basis)}
 
-\item{q}{Integer, number of rows for reshaping.}
+\item{q}{Integer, number of rows for reshaping}
 
 \item{r}{Integer, number of columns for reshaping.}
 }
