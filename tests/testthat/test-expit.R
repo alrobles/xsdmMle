@@ -30,4 +30,6 @@ expect_na <- function(object) {
   expect_true(is.na(object), info = "Expected value to be NA")
 }
 
-test_that("expit returns NA values", expect_na(expit(NA)))
+test_that("expit returns NA values", {
+  expect_na(expit(NA))
+})
