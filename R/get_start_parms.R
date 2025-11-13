@@ -14,7 +14,8 @@ get_start_parms <- function(ranges, numstarts = 100) {
   checkmate::assert_data_frame(ranges, any.missing = FALSE, ncols = 3)
   checkmate::assert_number(numstarts)
   checkmate::assert_names(names(ranges),
-                          must.include = c("lower", "center", "upper"))
+    must.include = c("lower", "center", "upper")
+  )
   # Set limits on the parameters
   lower <- ranges[, 1]
   names(lower) <- rownames(ranges)

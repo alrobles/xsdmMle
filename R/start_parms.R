@@ -14,11 +14,13 @@
 #' @examples
 #' envdat_ex_occ <- envdat_ex[, , occExample == 1]
 #' start_parms(envdat_ex_occ)
-start_parms <- function(env_dat, quant_vec = c(0.1, 0.5, 0.9), num_starts = 100) {
+start_parms <- function(env_dat,
+                        quant_vec = c(0.1, 0.5, 0.9),
+                        num_starts = 100) {
   checkmate::assert_array(env_dat, min.d = 1, null.ok = FALSE)
   checkmate::assert_vector(quant_vec, len = 3, strict = TRUE, null.ok = FALSE)
   checkmate::assert_number(num_starts)
-  
+
   range_df <- get_range_df(env_dat, quant_vec)
   get_start_parms(range_df, num_starts)
 }

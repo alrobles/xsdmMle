@@ -1,24 +1,27 @@
 #' Compute log(1 ± exp(-a)) Accurately and Efficiently
 #'
-#' This function computes either \eqn{\log(1 - \exp(-a))} or \eqn{\log(1 + \exp(x))} 
-#' in a numerically stable way, avoiding catastrophic cancellation for extreme values.
-#' The implementation is adapted from Martin Mächler's original function in the \pkg{copula} package.
+#' This function computes either \eqn{\log(1 - \exp(-a))} or
+#' \eqn{\log(1 + \exp(x))} in a numerically stable way, avoiding catastrophic
+#' cancellation for extreme values. The implementation is adapted from Martin
+#' Mächler's original function in the \pkg{copula} package.
 #'
 #' @param x Numeric vector of input values.
-#' @param c0,c1,c2 Numeric scalars used as cutoffs for switching between formulas 
-#' for optimal numerical stability. Defaults are chosen for best precision.
+#' @param c0,c1,c2 Numeric scalars used as cutoffs for switching between
+#' formulas for optimal numerical stability. Defaults are chosen for best
+#' precision.
 #'
-#' @return A numeric vector of the same length as \code{x}, where each element is:
+#' @return A numeric vector of the same length as \code{x}, where each element
+#' is:
 #' \itemize{
 #'   \item \eqn{\log(1 - \exp(-a))} computed accurately for positive \code{a}.
 #'   \item \eqn{\log(1 + \exp(x))} computed accurately for any \code{x}.
 #' }
-#' 
+#'
 #' @export
 #'
 #' @details
-#' Direct computation of these expressions can suffer from floating-point errors 
-#' when arguments are very small or very large. This function switches between 
+#' Direct computation of these expressions can suffer from floating-point errors
+#' when arguments are very small or very large. This function switches between
 #' stable formulas:
 #' \itemize{
 #'   \item \code{log(-expm1(-a))} for small \code{a}.
@@ -27,7 +30,8 @@
 #' }
 #'
 #' @note
-#' For \eqn{\log(1 - \exp(-a))}, \code{a} should be non-negative. A warning is issued if \code{a < 0}.
+#' For \eqn{\log(1 - \exp(-a))}, \code{a} should be non-negative. A warning is
+#' issued if \code{a < 0}.
 #'
 #' @examples
 #' # Compare log1p(exp(x)) with stable implementation

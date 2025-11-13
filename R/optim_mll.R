@@ -5,14 +5,15 @@
 #' the risk of local optima. Parallelization is supported for faster execution.
 #'
 #' @param env_dat A 3D numeric array of environmental time series data.
-#' @param occ A logical or numeric vector indicating presence (1) or absence (0).
+#' @param occ A logical or numeric vector indicating presence or absence (1/0).
 #' @param parallel Logical; if \code{TRUE}, optimization runs in parallel using
 #' \pkg{furrr} and \pkg{future}. Defaults to \code{FALSE}.
 #' @param numstarts Integer; number of random starting points for optimization.
 #' Defaults to \code{100}.
 #'
 #' @return A tibble with optimized parameter sets and their corresponding
-#' log-likelihood values, sorted in decreasing order of likelihood. Columns include:
+#' log-likelihood values, sorted in decreasing order of likelihood.
+#' Columns include:
 #' \itemize{
 #'   \item Estimated parameters.
 #'   \item \code{value}: the optimized log-likelihood.
@@ -36,40 +37,29 @@
 #' @seealso \code{\link[ucminf]{ucminf}}, \code{\link[furrr]{future_map}}
 #' @export
 optim_mll <- function(env_dat, occ, parallel = FALSE, numstarts = 100) {
-  
-  
   # env_dat: must be an array with at least 2 dimensions. We consider:
   # locations x time for one environmental variable and
   # location x time x environmental variable 2d and upper dimensions
   # This prevents passing a vector or 1D array by mistake.
   checkmate::assert_array(env_dat, min.d = 2)
-  
-  #   Using a disjunctive assert so either condition is acceptable
-  # checkmate::assert(
-  #   checkmate::check_logical(occ, any.missing = FALSE),
-  #   checkmate::check_integerish(occ, lower = 0, upper = 1, any.missing = FALSE),
-  #   .var.name = "occ"
-  # )
-  
   checkmate::assert(
     checkmate::check_logical(occ, any.missing = FALSE, min.len = 1),
-    checkmate::check_integerish(occ, lower = 0, upper = 1, any.missing = FALSE, min.len = 1),
+    checkmate::check_integerish(occ,
+      lower = 0,
+      upper = 1,
+      any.missing = FALSE,
+      min.len = 1
+    ),
     .var.name = "occ"
   )
-  
-  # # Ocurrence vector must contain possitive values
-  # checkmate::assert_true(
-  #   sum(as.integer(occ)) >= 1,
-  #   .var.name = "occ",
-  #   msg = "occ must contain at least one 1/TRUE"
-  # )
-  
+
   env_dat_ex_occ <- env_dat[, , occ == 1]
 
+  # Get parameters to input in model, given environment of occurrence data
   params_table <- start_parms(env_dat = env_dat_ex_occ, num_starts = numstarts)
   list_of_pars <- split(params_table, seq_len(nrow(params_table)))
   list_of_pars <- Map(unlist, list_of_pars)
-  
+
   # function generating of functions
   # useful to pass the environmental parameters and creates a function
   # that catch the parameters in the parallelization

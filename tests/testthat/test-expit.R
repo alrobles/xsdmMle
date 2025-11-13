@@ -1,9 +1,8 @@
-
 library(testthat)
 
 test_that("expit returns correct values for numeric input", {
-  expect_equal(expit(0), 0.5)  # expit(0) = 0.5
-  expect_equal(round(expit(1), 6), round(exp(1)/(1+exp(1)), 6))
+  expect_equal(expit(0), 0.5)
+  expect_equal(round(expit(1), 6), round(exp(1) / (1 + exp(1)), 6))
 })
 
 test_that("expit handles vector input correctly", {
@@ -28,8 +27,7 @@ test_that("expit fails on non-numeric input", {
 
 
 expect_na <- function(object) {
-  expect_true(is.na(object), info = "Expected value to be NA")}
-  
+  expect_true(is.na(object), info = "Expected value to be NA")
+}
 
-test_that("expit returns NA values", {
-  expect_na(expit(NA))})
+test_that("expit returns NA values", expect_na(expit(NA)))

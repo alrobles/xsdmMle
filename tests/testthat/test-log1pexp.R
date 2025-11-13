@@ -6,12 +6,12 @@ test_that("log1pexp computes correct values in different cutoff regions", {
   result_mid <- log1pexp(x_mid)
   expected_mid <- log1p(exp(x_mid))
   expect_equal(result_mid, expected_mid, tolerance = 1e-12)
-  
+
   # Values in region x > c2 (should approximate as x)
   x_large <- c(40, 50)
   result_large <- log1pexp(x_large)
   expect_equal(result_large, x_large, tolerance = 1e-12)
-  
+
   # Values in region c1 < x <= c2 (should use x + 1/exp(x))
   x_transition <- c(20, 30)
   result_transition <- log1pexp(x_transition)
@@ -29,7 +29,10 @@ test_that("log1pexp handles NA values correctly", {
 
 test_that("log1pexp respects custom cutoffs", {
   x <- c(0, 20, 40)
-  # Custom cutoffs: force first value into log1p region, second into transition, third into large
+  # Custom cutoffs:
+  # - force first value into log1p region
+  # - second into transition,
+  # - third into large
   result <- log1pexp(x, c0 = -5, c1 = 15, c2 = 35)
   expect_equal(result[1], log1p(exp(0)), tolerance = 1e-12)
   expect_equal(result[2], 20 + 1 / exp(20), tolerance = 1e-12)

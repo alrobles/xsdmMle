@@ -9,9 +9,11 @@
 #' @returns A data.frame with NA three columns, lower bound, center and
 #' upper bound of the range of the parameters.
 get_range_df <- function(env_dat, quant_vec = c(0.1, 0.5, 0.9)) {
-  checkmate::assert_array(env_dat, min.d = 1,
-                          null.ok = FALSE,
-                          any.missing = FALSE)
+  checkmate::assert_array(env_dat,
+    min.d = 1,
+    null.ok = FALSE,
+    any.missing = FALSE
+  )
   checkmate::assert_vector(quant_vec, len = 3, strict = TRUE)
   p <- dim(env_dat)[1]
   ranges <- data.frame(

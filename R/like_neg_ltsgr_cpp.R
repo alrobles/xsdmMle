@@ -65,24 +65,39 @@ like_neg_ltsgr_cpp <- function(env_dat,
                                o_mat,
                                n_threads = RcppParallel::defaultNumThreads()) {
   # ---- Assertions ----
-  checkmate::assert_array(env_dat, min.d = 2, any.missing = FALSE, null.ok = FALSE)
-  checkmate::assert_numeric(mu, lower = 0, any.missing = FALSE, len = dim(env_dat)[1])
-  checkmate::assert_numeric(sigl, lower = 0, any.missing = FALSE, len = length(mu))
-  checkmate::assert_numeric(sigr, lower = 0, any.missing = FALSE, len = length(mu))
-  checkmate::assert_matrix(o_mat, nrows = length(mu), ncols = length(mu), any.missing = FALSE)
+  checkmate::assert_array(env_dat,
+    min.d = 2, any.missing = FALSE,
+    null.ok = FALSE
+  )
+  checkmate::assert_numeric(mu,
+    lower = 0, any.missing = FALSE,
+    len = dim(env_dat)[1]
+  )
+  checkmate::assert_numeric(sigl,
+    lower = 0, any.missing = FALSE,
+    len = length(mu)
+  )
+  checkmate::assert_numeric(sigr,
+    lower = 0, any.missing = FALSE,
+    len = length(mu)
+  )
+  checkmate::assert_matrix(o_mat,
+    nrows = length(mu), ncols = length(mu),
+    any.missing = FALSE
+  )
   checkmate::assert_number(n_threads, lower = 1)
-  
+
   # ---- Set threads ----
   RcppParallel::setThreadOptions(numThreads = n_threads)
-  
+
   # ---- Dimensions ----
-  n <- dim(env_dat)[3]       # number of locations
+  n <- dim(env_dat)[3] # number of locations
   ts_length <- dim(env_dat)[2] # time steps
-  p <- length(mu)            # number of environmental variables
-  
+  p <- length(mu) # number of environmental variables
+
   # ---- Reshape env_dat ----
   env_dat_mat <- matrix(env_dat, nrow = p, ncol = ts_length * n)
-  
+
   # ---- Compute inverse matrices ----
   if (p == 1) {
     dl_inv <- matrix(1 / sigl, 1, 1)
@@ -92,7 +107,7 @@ like_neg_ltsgr_cpp <- function(env_dat,
     dr_inv <- diag(1 / sigr)
   }
   drl_inv <- dr_inv - dl_inv
-  
+
   # ---- Call C++ core function ----
   res <- like_ltsg(
     env_m = env_dat_mat,
@@ -103,9 +118,9 @@ like_neg_ltsgr_cpp <- function(env_dat,
     q = ts_length,
     r = n
   )
-  
+
   # ---- Reset threads ----
   RcppParallel::setThreadOptions(numThreads = RcppParallel::defaultNumThreads())
-  
-  return(res)
+
+  res
 }

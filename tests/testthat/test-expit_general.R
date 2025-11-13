@@ -7,7 +7,7 @@ test_that("expit_general returns value between bounds", {
 
 test_that("expit_general returns midpoint at x0", {
   result <- expit_general(0, -1, 1, 0)
-  expect_equal(round(result, 6), 0)  # midpoint should be 0
+  expect_equal(round(result, 6), 0) # midpoint should be 0
 })
 
 test_that("expit_general handles vector input", {
