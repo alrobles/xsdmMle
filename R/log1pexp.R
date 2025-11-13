@@ -13,6 +13,8 @@
 #'   \item \eqn{\log(1 - \exp(-a))} computed accurately for positive \code{a}.
 #'   \item \eqn{\log(1 + \exp(x))} computed accurately for any \code{x}.
 #' }
+#' 
+#' @export
 #'
 #' @details
 #' Direct computation of these expressions can suffer from floating-point errors 

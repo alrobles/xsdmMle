@@ -5,7 +5,3 @@ like_ltsg <- function(mu, env_m, dl_mat, drl_mat, ortho_m, q, r) {
     .Call(`_xsdmMle_like_ltsg`, mu, env_m, dl_mat, drl_mat, ortho_m, q, r)
 }
 
-parallelVectorSum <- function(x) {
-    .Call(`_xsdmMle_parallelVectorSum`, x)
-}
-

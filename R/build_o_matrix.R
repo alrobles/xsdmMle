@@ -6,9 +6,7 @@
 #' @examples
 #' build_o_matrix(0) # Identity
 build_o_matrix <- function(entries) {
-  
   checkmate::assert_numeric(entries, any.missing = FALSE, null.ok = TRUE)
-  
   # get number of matrix entries given the parameter vector
   if (is.null(entries)) {
     matrix(1, 1, 1)

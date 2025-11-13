@@ -2,7 +2,7 @@
 % Please edit documentation in R/loglik_biol.R
 \name{loglik_biol}
 \alias{loglik_biol}
-\title{Logarithm of the likelihood oof detection of a species}
+\title{Logarithm of the likelihood of detection of a species}
 \usage{
 loglik_biol(
   env_dat,
@@ -54,7 +54,7 @@ provided parameters for a given set of environmetnal conditions an presence
 absence locations
 }
 \description{
-Logarithm of the likelihood oof detection of a species
+Logarithm of the likelihood of detection of a species
 }
 \examples{
 o_mat <- param_list_example$o_mat

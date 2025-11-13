@@ -24,7 +24,6 @@ Imports:
     furrr,
     future,
     future.callr,
-    optimx,
     pomp,
     purrr,
     Rcpp,

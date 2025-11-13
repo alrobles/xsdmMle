@@ -61,7 +61,7 @@ like_neg_ltsgr_cpp <- function(env_dat,
                                o_mat,
                                n_threads = RcppParallel::defaultNumThreads()) {
   # ---- Assertions ----
-  checkmate::assert_array(env_dat, min.d = 3, any.missing = FALSE, null.ok = FALSE)
+  checkmate::assert_array(env_dat, min.d = 2, any.missing = FALSE, null.ok = FALSE)
   checkmate::assert_numeric(mu, lower = 0, any.missing = FALSE, len = dim(env_dat)[1])
   checkmate::assert_numeric(sigl, lower = 0, any.missing = FALSE, len = length(mu))
   checkmate::assert_numeric(sigr, lower = 0, any.missing = FALSE, len = length(mu))

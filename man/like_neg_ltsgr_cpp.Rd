@@ -2,8 +2,7 @@
 % Please edit documentation in R/like_neg_ltsgr_cpp.R
 \name{like_neg_ltsgr_cpp}
 \alias{like_neg_ltsgr_cpp}
-\title{The negative of the (like) long term stochastich growth function
-implemented in c++.}
+\title{Compute Negative Log-Likelihood for Long-Term Stochastic Growth}
 \usage{
 like_neg_ltsgr_cpp(
   env_dat,
@@ -15,36 +14,59 @@ like_neg_ltsgr_cpp(
 )
 }
 \arguments{
-\item{env_dat}{The environmental data array}
+\item{env_dat}{\code{array}
+A 3-dimensional numeric array of environmental data with dimensions:
+\itemize{
+  \item \code{[p]} Number of environmental variables
+  \item \code{[ts_length]} Time series steps
+  \item \code{[n]} Number of locations
+}
+Must not contain missing values.}
 
-\item{mu}{A vector of mu}
+\item{mu}{\code{numeric vector}
+Length-\code{p} vector of location parameters (means) for each environmental variable.}
 
-\item{sigl}{A vector of sigl}
+\item{sigl}{\code{numeric vector}
+Length-\code{p} vector of left-side standard deviations (asymmetry).}
 
-\item{sigr}{A vector of sigr}
+\item{sigr}{\code{numeric vector}
+Length-\code{p} vector of right-side standard deviations (asymmetry).}
 
-\item{o_mat}{An orthogonal matrix}
+\item{o_mat}{\code{matrix}
+A \code{p x p} orthogonal matrix used for rotation in parameter space.}
 
-\item{n_threads}{The number of threads for parallel computing}
+\item{n_threads}{\code{integer}
+Number of threads for parallel computation. Defaults to \code{RcppParallel::defaultNumThreads()}.}
 }
 \value{
-A numeric value of the log of the likelihood function
+\code{numeric scalar}  
+  The negative log-likelihood value computed from the environmental data and parameters.
 }
 \description{
-The negative of the (like) long term stochastich growth function
-implemented in c++.
+This function calculates the negative of the long-term stochastic growth likelihood
+using a C++ implementation optimized with \pkg{RcppParallel}. It applies transformations
+to environmental data and computes the likelihood based on specified parameters.
+}
+\details{
+Internally, this function:
+\enumerate{
+  \item Reshapes the environmental data into a matrix.
+  \item Computes inverse matrices for asymmetry adjustments.
+  \item Calls the C++ function \code{like_ltsg()} for efficient likelihood computation.
+}
+}
+\note{
+Ensure that \code{env_dat} has positive detections and no missing values.
+All parameter vectors (\code{mu}, \code{sigl}, \code{sigr}) must have length equal to the
+number of environmental variables (\code{p}).
 }
 \examples{
+# Example usage:
 o_mat <- matrix(c(-0.4443546, 0.8958510, -0.8958510, -0.4443546), ncol = 2)
 mu <- c(11.433373, 5.046939)
 sigl <- c(1.036834, 1.556083)
 sigr <- c(1.538972, 1.458738)
-M <- like_neg_ltsgr_cpp(
-  env_dat = envdat_ex,
-  mu = mu,
-  sigl = sigl,
-  sigr = sigl,
-  o_mat = o_mat
-)
+env_dat <- array(runif(2 * 3 * 2), dim = c(2, 3, 2))
+like_neg_ltsgr_cpp(env_dat, mu, sigl, sigr, o_mat)
 
 }

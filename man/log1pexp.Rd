@@ -2,30 +2,47 @@
 % Please edit documentation in R/log1pexp.R
 \name{log1pexp}
 \alias{log1pexp}
-\title{Compute f(a) = log(1 +/- exp(-a)) Numerically Optimally.
-Original function by Martin Mächler (2012) in copula R pacakge}
+\title{Compute log(1 ± exp(-a)) Accurately and Efficiently}
 \usage{
 log1pexp(x, c0 = -37, c1 = 18, c2 = 33.3)
 }
 \arguments{
-\item{x}{Numeric vector}
+\item{x}{Numeric vector of input values.}
 
-\item{c0}{Cutoffs for log1pexp}
-
-\item{c1}{Cutoffs for log1pexp}
-
-\item{c2}{Cutoffs for log1pexp}
+\item{c0, c1, c2}{Numeric scalars used as cutoffs for switching between formulas 
+for optimal numerical stability. Defaults are chosen for best precision.}
 }
 \value{
-f(a) == log(1 - exp(-a)) == log1p(-exp(-a)) == log(-expm1(-a))
-or g(x) == log(1 + exp(x)) == log1p(exp(x))
-computed accurately and quickly
+A numeric vector of the same length as \code{x}, where each element is:
+\itemize{
+  \item \eqn{\log(1 - \exp(-a))} computed accurately for positive \code{a}.
+  \item \eqn{\log(1 + \exp(x))} computed accurately for any \code{x}.
+}
 }
 \description{
-Compute f(a) = log(1 +/- exp(-a)) Numerically Optimally.
-Original function by Martin Mächler (2012) in copula R pacakge
+This function computes either \eqn{\log(1 - \exp(-a))} or \eqn{\log(1 + \exp(x))} 
+in a numerically stable way, avoiding catastrophic cancellation for extreme values.
+The implementation is adapted from Martin Mächler's original function in the \pkg{copula} package.
+}
+\details{
+Direct computation of these expressions can suffer from floating-point errors 
+when arguments are very small or very large. This function switches between 
+stable formulas:
+\itemize{
+  \item \code{log(-expm1(-a))} for small \code{a}.
+  \item \code{log1p(-exp(-a))} for large \code{a}.
+  \item \code{log1p(exp(x))} for \eqn{\log(1 + \exp(x))}.
+}
+}
+\note{
+For \eqn{\log(1 - \exp(-a))}, \code{a} should be non-negative. A warning is issued if \code{a < 0}.
 }
 \examples{
+# Compare log1p(exp(x)) with stable implementation
 x <- seq(700, 720, by = 2)
 cbind(x, log1p(exp(x)), log1pexp(x))
+
+}
+\seealso{
+\code{\link{log1p}}, \code{\link{expm1}}
 }

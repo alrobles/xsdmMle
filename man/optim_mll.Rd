@@ -2,23 +2,50 @@
 % Please edit documentation in R/optim_mll.R
 \name{optim_mll}
 \alias{optim_mll}
-\title{Optimization of the log-likelihood function}
+\title{Optimize Multivariate Log-Likelihood For Species Distribution Model}
 \usage{
-optim_mll(envdat, occ, parallel = FALSE, numstarts = 100)
+optim_mll(env_dat, occ, parallel = FALSE, numstarts = 100)
 }
 \arguments{
-\item{envdat}{Environmental time series array}
+\item{env_dat}{A 3D numeric array of environmental time series data.}
 
-\item{occ}{Presence absence vector}
+\item{occ}{A logical or numeric vector indicating presence (1) or absence (0).}
 
-\item{parallel}{Parallelization strategy}
+\item{parallel}{Logical; if \code{TRUE}, optimization runs in parallel using
+\pkg{furrr} and \pkg{future}. Defaults to \code{FALSE}.}
 
-\item{numstarts}{Number of samples to start the optimizations.}
+\item{numstarts}{Integer; number of random starting points for optimization.
+Defaults to \code{100}.}
+}
+\value{
+A tibble with optimized parameter sets and their corresponding
+log-likelihood values, sorted in decreasing order of likelihood. Columns include:
+\itemize{
+  \item Estimated parameters.
+  \item \code{value}: the optimized log-likelihood.
+  \item \code{convergence}: convergence code from \pkg{ucminf}.
+  \item \code{index}: rank of the solution.
+}
 }
 \description{
-Optimization of the log-likelihood function
+Performs optimization of a multivariate log-likelihood function using the
+\pkg{ucminf} algorithm. Multiple random starting points are used to reduce
+the risk of local optima. Parallelization is supported for faster execution.
+}
+\details{
+The optimization uses \code{ucminf::ucminf()} with central differences for
+gradients and relaxed tolerances for robustness. Parallelization uses
+\pkg{future} and \pkg{furrr} when \code{parallel = TRUE}.
+}
+\note{
+Presence-absence filtering is applied internally to \code{envdat} before
+optimization.
 }
 \examples{
+# Example with subset of environmental data and occurrence vector
 optim_df <- optim_mll(envdat_ex[, , 1:5], occExample[1:5], numstarts = 5)
 
+}
+\seealso{
+\code{\link[ucminf]{ucminf}}, \code{\link[furrr]{future_map}}
 }

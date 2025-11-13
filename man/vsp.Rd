@@ -17,3 +17,9 @@ A raster with a virtual species probability of detection
 \description{
 Virtual species
 }
+\examples{
+# example code
+paramListExample
+xsdmMle::envdat_ex
+vsp(envdat_ex, param_list_example)
+}

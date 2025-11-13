@@ -17,3 +17,6 @@ An integer with the number of parameters
 Get the number of parameters of the model given the number
 of environmental time serires
 }
+\examples{
+numparms(2)
+}

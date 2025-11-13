@@ -1,7 +1,7 @@
 #' This is used to calculated horizontal distance
 #' between parameters
 #'
-#' @param bparms  A list with parameters to adjust to a canonical form
+#' @param parms_bio  A list with parameters to adjust to a canonical form
 #' @returns A list  with parameters in canonical form
 #'
 #' @export
@@ -10,12 +10,12 @@
 #'
 #' param_table_example[1, ] |>
 #'   math_to_bio() |>
-#'   make_cannonical()
-make_cannonical <- function(bparms) {
+#'   make_canonical()
+make_canonical <- function(parms_bio) {
   # extract the components that need to be changed
-  o_mat <- bparms$o_mat
-  sigl <- bparms$sigl
-  sigr <- bparms$sigr
+  o_mat <- parms_bio$o_mat
+  sigl <- parms_bio$sigl
+  sigr <- parms_bio$sigr
 
   # first multiply each column of O by 1 or -1 to make the top-most
   # non-zero entry be positive
@@ -39,8 +39,8 @@ make_cannonical <- function(bparms) {
   sigr <- sigr[inds]
 
   # reinsert the three altered components and return
-  bparms$o_mat <- o_mat
-  bparms$sigl <- sigl
-  bparms$sigr <- sigr
-  bparms
+  parms_bio$o_mat <- o_mat
+  parms_bio$sigl <- sigl
+  parms_bio$sigr <- sigr
+  parms_bio
 }
