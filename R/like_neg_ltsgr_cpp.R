@@ -1,10 +1,11 @@
 #' Compute Negative Log-Likelihood for Long-Term Stochastic Growth
 #'
-#' This function calculates the negative of the long-term stochastic growth likelihood
-#' using a C++ implementation optimized with \pkg{RcppParallel}. It applies transformations
-#' to environmental data and computes the likelihood based on specified parameters.
+#' This function calculates the negative of the long-term stochastic growth
+#' likelihood using a C++ implementation optimized with \pkg{RcppParallel}.
+#' It applies transformations to environmental data and computes the likelihood
+#' based on specified parameters.
 #'
-#' @param env_dat \code{array}  
+#' @param env_dat \code{array}
 #'   A 3-dimensional numeric array of environmental data with dimensions:
 #'   \itemize{
 #'     \item \code{[p]} Number of environmental variables
@@ -13,44 +14,47 @@
 #'   }
 #'   Must not contain missing values.
 #'
-#' @param mu \code{numeric vector}  
-#'   Length-\code{p} vector of location parameters (means) for each environmental variable.
+#' @param mu \code{numeric vector}
+#'   Length-\code{p} vector of location parameters (means) for each
+#'   environmental variable.
 #'
-#' @param sigl \code{numeric vector}  
+#' @param sigl \code{numeric vector}
 #'   Length-\code{p} vector of left-side standard deviations (asymmetry).
 #'
-#' @param sigr \code{numeric vector}  
+#' @param sigr \code{numeric vector}
 #'   Length-\code{p} vector of right-side standard deviations (asymmetry).
 #'
-#' @param o_mat \code{matrix}  
+#' @param o_mat \code{matrix}
 #'   A \code{p x p} orthogonal matrix used for rotation in parameter space.
 #'
-#' @param n_threads \code{integer}  
-#'   Number of threads for parallel computation. Defaults to \code{RcppParallel::defaultNumThreads()}.
+#' @param n_threads \code{integer}
+#'   Number of threads for parallel computation. Defaults to
+#'    \code{RcppParallel::defaultNumThreads()}.
 #'
-#' @return \code{numeric scalar}  
-#'   The negative log-likelihood value computed from the environmental data and parameters.
+#' @return \code{numeric scalar}
+#'   The negative log-likelihood value computed from the environmental data and
+#'   parameters.
 #'
 #' @details
 #' Internally, this function:
 #' \enumerate{
 #'   \item Reshapes the environmental data into a matrix.
 #'   \item Computes inverse matrices for asymmetry adjustments.
-#'   \item Calls the C++ function \code{like_ltsg()} for efficient likelihood computation.
+#'   \item Calls the C++ function \code{like_ltsg()} for efficient likelihood
+#'   computation.
 #' }
-#'
 #' @note
 #' Ensure that \code{env_dat} has positive detections and no missing values.
-#' All parameter vectors (\code{mu}, \code{sigl}, \code{sigr}) must have length equal to the
-#' number of environmental variables (\code{p}).
+#' All parameter vectors (\code{mu}, \code{sigl}, \code{sigr}) must have length
+#' equal to the number of environmental variables (\code{p}).
 #'
 #' @examples
 #' # Example usage:
-#' o_mat <- matrix(c(-0.4443546, 0.8958510, -0.8958510, -0.4443546), ncol = 2)
-#' mu <- c(11.433373, 5.046939)
-#' sigl <- c(1.036834, 1.556083)
-#' sigr <- c(1.538972, 1.458738)
-#' env_dat <- array(runif(2 * 3 * 2), dim = c(2, 3, 2))
+#' o_mat <- matrix(c(-0.4, 0.9, -0.9, -0.4), ncol = 2)
+#' mu <- c(11, 5)
+#' sigl <- c(1, 1.5)
+#' sigr <- c(1.5, 1.4)
+#' env_dat <- array(runif(2 * 3 * 2, min = 4, max = 12), dim = c(2, 3, 2))
 #' like_neg_ltsgr_cpp(env_dat, mu, sigl, sigr, o_mat)
 #'
 #' @export

@@ -45,7 +45,6 @@ env_data_array <- function(env_data, occ = NULL) {
       env_data_array <- simplify2array(env_data_array)
       # to do check:
       # temporary rotate the array to fit with the xsdmMle using aperm
-      
     }
   } else {
     if (length(env_data) == 1) {

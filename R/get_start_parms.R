@@ -10,13 +10,12 @@
 #' @returns A data frame with columns the parameters and rows the number of sets
 #' of starting parameters
 get_start_parms <- function(ranges, numstarts = 100) {
-  # now get the actual start parameters, math scale
-  
+  # Check parameters
   checkmate::assert_data_frame(ranges, any.missing = FALSE, ncols = 3)
   checkmate::assert_number(numstarts)
-  checkmate::assert_names(names(ranges), must.include = c("lower", "center", "upper"))
-  
-  
+  checkmate::assert_names(names(ranges),
+                          must.include = c("lower", "center", "upper"))
+  # Set limits on the parameters
   lower <- ranges[, 1]
   names(lower) <- rownames(ranges)
   center <- ranges[, 2]
@@ -24,6 +23,7 @@ get_start_parms <- function(ranges, numstarts = 100) {
   upper <- ranges[, 3]
   names(upper) <- rownames(ranges)
 
+  # Get the actual start parameters, math scale
   startparms_math <- pomp::sobol_design(
     lower = lower,
     upper = upper,
