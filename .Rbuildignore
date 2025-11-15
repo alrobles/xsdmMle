@@ -8,3 +8,6 @@
 ^\.github$
 ^codecov\.yml$
 ^badges$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

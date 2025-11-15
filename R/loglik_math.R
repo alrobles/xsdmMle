@@ -21,6 +21,8 @@
 #' params <- param_table_example[5, ]
 #' param_vector <- params
 #' loglik_math(params, env_dat, occ)
+#' 
+#' 
 #'
 #' opt_a <- c(
 #'   mu1 = NA_real_,
@@ -61,6 +63,7 @@ loglik_math <- function(param_vector,
   checkmate::assert_array(env_dat, min.d = 2)
 
   # param_vector: numeric vector (length >= 1) with no missing values.
+  param_vector <- unlist(param_vector)
   checkmate::assert_vector(param_vector, any.missing = FALSE, min.len = 5)
 
   # Check fix values in param_vector
@@ -69,14 +72,16 @@ loglik_math <- function(param_vector,
   }
 
   # Check if any of opt is not NA-----------------------------------------------
-  if (any(!sapply(opt, is.na))) {
-    i <- !sapply(opt, is.na)
-    # Fix non-NA values
+  if (any(!vapply(opt, is.na, logical(1)))) {
+    i <- !vapply(opt, is.na, logical(1))
     param_vector[i] <- opt[i]
   }
 
+  #param_vector <- tibble::as_tibble_row(as.list(param_vector))
+
   # Prepare parameters from math scale to biological scale----------------------
   param_list <- math_to_bio(param_vector)
+ 
 
   # Now validate biological parameters (mu, sigl, sigr, ctil, pd)---------------
   checkmate::assert_numeric(param_list$mu, any.missing = FALSE, min.len = 1)
